@@ -1,0 +1,55 @@
+# Site settings
+title: Radiosonde Project Documentation
+email: your-email@example.com
+description: >-
+  Technical documentation and development blog for the open-source radiosonde project.
+  Covering firmware, hardware, geospatial indexing, and tools development.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+
+# Build settings
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Navigation
+header_pages:
+  - index.md
+  - about.md
+
+# Collections for organizing documentation
+collections:
+  firmware:
+    output: true
+    permalink: /:collection/:name
+  hardware:
+    output: true
+    permalink: /:collection/:name
+  h3lite:
+    output: true
+    permalink: /:collection/:name
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .gitignore
+  - README.md
