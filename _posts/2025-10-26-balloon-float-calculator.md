@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "New Interactive Balloon Float Calculator"
-date: 2025-10-26 18:40:00 -0600
+date: 2025-10-26 12:00:00 -0600
 categories: tools
 tags: [calculator, balloon, float, superpressure, physics]
 ---
