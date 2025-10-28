@@ -10,147 +10,123 @@ tags: [calculator, balloon, float, superpressure, physics]
 
 I'm excited to announce the launch of our new interactive Balloon Float Calculator, a comprehensive educational tool for designing superpressure balloon flights. This calculator replaces our previous float calculator with a more detailed, step-by-step approach that helps users understand the physics behind balloon flight.
 
+**[Try the Calculator Now →](https://stratosonde.github.io/.github/profile/float1g_visual.html)**
+
+![Balloon Float Calculator Interface](/.github/profile/images/float.png)
+
 ## Understanding Balloon Physics: The Swimming Pool Analogy
 
-Before diving into the technical details, let's build an intuitive understanding of how balloon flight works using an analogy most people can relate to: swimming and diving in a pool.
+Before diving into the technical details, let's build an intuitive understanding using a familiar experience: diving in a pool.
 
-**Think of diving in a pool.** At the surface, you might need a weight belt (your payload) to help you sink. As you dive deeper, the water pressure compresses any air in your lungs and equipment. At some depth, you reach a point where you neither sink nor float—you're perfectly balanced at **neutral buoyancy**. This is exactly like your balloon's **float altitude**.
+Imagine you're diving with a weight belt pulling you down. At the surface, the weight overcomes your buoyancy and you sink. As you descend, water pressure increases and compresses the air in your lungs. Eventually, you reach a depth where you neither sink nor float—you've achieved **neutral buoyancy**, perfectly balanced between the weight pulling you down and the water pushing you up.
 
-Now imagine you're carrying an inflatable balloon underwater. At the surface, you fill it with air (your **gas fill volume**). As you dive:
-- The water pressure (**external pressure**) increases
-- It squeezes the balloon smaller 
-- Eventually the balloon is fully compressed and can't shrink anymore (the **superpressure onset** point)
-- If you keep diving, the pressure difference between inside and outside the balloon (**differential pressure**) creates stress on the balloon walls
-- Dive too deep and that stress could burst the balloon
+As you dive deeper, the water pressure continues to increase and compress your lungs further. At some point, your lungs reach their minimum compressed volume and can't shrink anymore. If you were to dive even deeper beyond this point, the pressure difference between the water outside and the remaining air inside your lungs would continue to grow, creating increasing stress on your chest.
 
-Your high-altitude balloon works exactly the same way, just in reverse—rising through decreasing air pressure instead of sinking through increasing water pressure!
+**Here's the crucial insight:** Your high-altitude balloon works exactly the same way, just in reverse. Instead of diving into increasing water pressure, it rises through decreasing air pressure. Instead of sinking to find neutral buoyancy, it ascends to find it. The physics are identical.
 
-### The Critical Difference: No Active Control
+But there's one critical difference: **as a diver, you can adjust your depth** by swimming up or down to find your preferred level. Your balloon cannot. Every parameter—the balloon size, payload weight, gas volume, free lift—must be calculated perfectly before launch. Once released, physics alone determines where it will float. One shot to get it right—which is exactly what this calculator helps you do.
 
-Here's what makes balloon design challenging: **Scuba divers have an advantage**. They can actively control their depth by adjusting their BCD (Buoyancy Control Device)—adding or releasing air to go up or down. But a balloon can't do this. It must be calculated perfectly before launch.
+## Design Parameters
 
-This is why getting all these variables right is critical:
-- **Balloon volume** - How big your "underwater balloon" can get
-- **Payload weight** - How much weight pulls you down
-- **Gas type** - How buoyant your lifting gas is (helium vs hydrogen)
-- **Free lift** - Extra buoyancy to start ascending
-- **Differential pressure** - The stress on your balloon envelope
+The calculator takes your design decisions and predicts your flight performance. Here's what you control and what gets calculated:
 
-The balloon will find its equilibrium altitude based on physics alone, with no ability to adjust mid-flight. One shot to get it right—which is exactly what this calculator helps you do!
+### Inputs (Your Design Decisions)
 
-## From Pool to Sky: The Input-Output Relationship
+**Balloon Volume** (e.g., 0.5 m³)
+- Physical capacity of your balloon when fully inflated
+- Larger volume = higher float altitude, but heavier and more expensive
+- Typical party balloons: 36" Qualatex = 0.5 m³
 
-Let's bridge the gap between our swimming analogy and your actual picoballoon flight. Here's how the calculator transforms your design choices into flight predictions:
+**Balloon Weight** (e.g., 105 grams)
+- Mass of the latex envelope itself
+- Heavier balloon needs more lift and reduces maximum altitude
+- Typical 36" Qualatex weighs ~105g
 
-### What You Control (Inputs)
+**Payload Weight** (e.g., 10 grams)
+- Total mass of electronics, sensors, battery, antenna
+- Every gram matters—lighter payload = higher float altitude
+- Picoballoon payloads typically 5-15 grams
 
-These are your **design decisions** before launch:
+**Free Lift** (e.g., 8 grams)
+- Extra buoyant force beyond neutral buoyancy
+- Determines ascent rate and ability to overcome thermals
+- Too little = slow rise; too much = wastes gas and lowers float altitude
+- Typical range: 5-10 grams for picoballoons
 
-1. **Balloon Volume** (e.g., 0.5 m³)
-   - *Analogy:* Maximum size of your underwater balloon before it pops
-   - *Reality:* Physical volume of your party balloon when fully inflated
-   - *Why it matters:* Bigger balloon = higher float altitude, but also heavier and more expensive
+**Gas Type** (Helium vs Hydrogen)
+- Helium: Safer, 0.169 kg/m³ density
+- Hydrogen: More lift (~2×), 0.085 kg/m³ density, but flammable
+- Choice affects both lift capability and safety considerations
 
-2. **Balloon Weight** (e.g., 105 grams)
-   - *Analogy:* Weight of the balloon material itself
-   - *Reality:* Mass of the latex/rubber envelope (typical Qualatex 36" = 105g)
-   - *Why it matters:* Heavier balloon needs more lift, reduces maximum altitude
+**Launch Conditions** (Elevation, Temperature, Pressure)
+- Atmospheric conditions at your launch site
+- Affects initial air density and gas expansion calculations
+- Critical for accurate fill volume determination
 
-3. **Payload Weight** (e.g., 10 grams)
-   - *Analogy:* Your weight belt pulling down
-   - *Reality:* Total mass of electronics, sensors, battery, antenna
-   - *Why it matters:* Every gram matters! The lighter your payload, the higher you can float
+### Outputs (Predicted Flight Performance)
 
-4. **Free Lift** (e.g., 8 grams)
-   - *Analogy:* Extra air you add to start rising
-   - *Reality:* Extra buoyant force beyond what's needed for neutral buoyancy
-   - *Why it matters:* Determines ascent rate. Too little = slow rise. Too much = wastes gas and reduces float altitude
+**Gas Fill Volume** (e.g., 0.28 m³ or 280 liters)
+- Exact amount of helium/hydrogen to fill at launch
+- Too little = insufficient lift; too much = reduced float altitude
+- This is the number you'll use when filling your balloon
 
-5. **Gas Type** (Helium vs Hydrogen)
-   - *Analogy:* How buoyant your air bubbles are underwater
-   - *Reality:* Helium (safer, 0.169 kg/m³) vs Hydrogen (more lift, 0.085 kg/m³)
-   - *Why it matters:* Hydrogen provides ~2× the lift of helium but is flammable
+**Superpressure Onset Altitude** (e.g., 8,500 m)
+- Height where balloon becomes fully inflated
+- Below this: balloon expands freely as external pressure decreases
+- Above this: pressure builds inside the envelope
+- Understanding this helps predict balloon behavior during ascent
 
-6. **Launch Conditions** (Elevation, Temperature)
-   - *Analogy:* Starting at the shallow end vs deep end
-   - *Reality:* Pressure and temperature at your launch site
-   - *Why it matters:* Affects initial air density and gas expansion
+**Float Altitude** (e.g., 10,200 m or 33,500 ft)
+- Final cruising altitude where neutral buoyancy is achieved
+- Where your balloon will spend most of its flight
+- Determines radio line-of-sight and available power (solar angle)
 
-### What Gets Calculated (Outputs)
+**Differential Pressure** (e.g., 3.2 kPa or 0.46 psi)
+- Stress on balloon envelope at float altitude
+- Critical safety parameter—too high risks burst
+- Qualatex 36" bursts at ~4.7-5.4 kPa
+- Must stay well below burst threshold for safety margin
 
-The calculator uses physics to predict your **flight performance**:
+### The Core Trade-offs
 
-1. **Gas Fill Volume** (e.g., 0.28 m³ or 280 liters)
-   - *What it tells you:* How much helium/hydrogen to blow into the balloon at launch
-   - *Why it matters:* Too little = won't lift. Too much = wastes gas and reduces float altitude
-   - *Real-world use:* "I need exactly 280 liters of helium to fill my balloon"
+The picoballoon design challenge involves balancing several competing factors:
 
-2. **Superpressure Onset Altitude** (e.g., 8,500 m)
-   - *What it tells you:* Height where balloon becomes fully inflated
-   - *Why it matters:* Below this altitude, balloon expands freely. Above this, pressure builds
-   - *Real-world use:* "My balloon will be fully inflated by 8.5 km altitude"
+**Payload Weight:** Lighter payload = higher float altitude. Every gram of payload weight requires additional lift and lowers your maximum achievable altitude.
 
-3. **Float Altitude** (e.g., 10,200 m)
-   - *What it tells you:* Final cruising altitude where balloon achieves neutral buoyancy
-   - *Why it matters:* This is where your balloon will spend most of its time drifting
-   - *Real-world use:* "My picoballoon will cruise at 10.2 km (33,500 ft)"
+**Balloon Size:** Larger balloon = higher float altitude BUT heavier envelope and higher cost. A bigger balloon provides more buoyancy but adds its own weight penalty.
 
-4. **Differential Pressure** (e.g., 3.2 kPa or 0.46 psi)
-   - *What it tells you:* Stress on balloon envelope at float altitude
-   - *Why it matters:* Too high = burst risk. Qualatex 36" bursts at ~4.7-5.4 kPa
-   - *Real-world use:* "My design is safe with 3.2 kPa pressure differential"
+**Differential Pressure:** Must stay well below burst limit (typically 4.7 kPa for Qualatex 36"). Higher float altitudes generally mean higher differential pressures, so you're balancing altitude goals against envelope stress limits.
 
-### The Critical Trade-off
+**Free Lift:** Needs to be sufficient to overcome thermals and ensure steady ascent, but excess free lift wastes gas and can reduce float altitude.
 
-Here's the picoballoon design challenge in one sentence:
+The calculator helps you find the optimal combination where all these factors align for a successful, safe flight.
 
-**More gas = higher altitude BUT = larger differential pressure = higher burst risk**
-
-This is why the calculator is essential. You're balancing:
-- ✅ **Enough lift** to reach your target altitude
-- ✅ **Enough gas** to fully inflate the balloon
-- ⚠️ **Not too much pressure** that risks bursting
-- ✅ **Enough free lift** to overcome thermals and turbulence
-- ⚠️ **Not too much free lift** that wastes gas and lowers float altitude
-
-Just like a diver carefully planning their dive profile to avoid nitrogen narcosis and decompression sickness, you're carefully planning your balloon's flight profile to balance altitude, safety, and performance.
-
-## What's New
-
-The new calculator provides a complete educational experience with:
+## Features
 
 ### Step-by-Step Physics Explanations
 
-Rather than just showing final numbers, the calculator walks through each stage of the calculation:
+Rather than just showing final numbers, the calculator walks through each stage:
 
-1. **System Density** - Understanding the overall density of your balloon+payload system
-2. **Gas Fill Volume** - Calculating how much gas to fill at launch based on atmospheric conditions
-3. **Float & Onset Altitude** - Determining where the balloon becomes fully inflated and achieves neutral buoyancy
-4. **Pressure Analysis** - Critical safety calculations showing differential pressure and stress on the balloon envelope
+1. **System Density** - Overall density of your balloon+payload system
+2. **Gas Fill Volume** - Launch fill calculation based on atmospheric conditions
+3. **Float & Onset Altitude** - Where the balloon inflates fully and achieves neutral buoyancy
+4. **Pressure Analysis** - Safety calculations for differential pressure and envelope stress
 
 ### Visual Feedback
 
-- Color-coded calculation steps for easy understanding
+- Color-coded calculation steps for clarity
 - Interactive pressure vs altitude chart showing external pressure, internal pressure, and differential pressure
-- Real-time safety indicators with clear warnings about burst pressure limits
+- Real-time safety indicators with clear warnings
 
-### Educational Focus
+### Safety First
 
-Each step includes:
-- The mathematical formula being used
-- Explanation of what the calculation represents
-- Real values with proper units
-- Safety considerations (especially important for the pressure differential calculations)
-
-## Safety First
-
-One of the most important features is the pressure differential safety indicator. The calculator clearly shows:
+The calculator provides clear safety guidance:
 
 - ✅ **Safe** (< 4.0 kPa) - Conservative safety margin
 - ⚠️ **Caution** (4.0-4.7 kPa) - Approaching burst limit, careful monitoring needed
 - 🛑 **Danger** (≥ 4.7 kPa) - At or above burst limit, redesign required
 
-This is based on empirical data showing Qualatex 36" balloons burst at 4.7-5.4 kPa differential pressure.
+Based on empirical data from Qualatex 36" balloon burst testing at 4.7-5.4 kPa differential pressure.
 
 ## Based on UKHAS SPLAT
 
