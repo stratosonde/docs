@@ -12,7 +12,7 @@ I'm excited to announce the launch of our comprehensive Power Budget Calculator 
 
 **[Try the Calculator Now →](https://stratosonde.github.io/.github/profile/solar_radiosonde_power_budget.html)**
 
-![Stratosonde Power Budget Calculator Interface](/.github/profile/images/power_model.png)
+![Stratosonde Power Budget Calculator Interface]({{ site.baseurl }}/assets/images/posts/2025-10-27-stratosonde-power-calculator/power_model.png)
 
 ## The Power Challenge: Surviving at the Edge of Space
 
@@ -34,7 +34,7 @@ The calculator includes detailed system diagrams that illustrate how power flows
 
 ### Power Distribution Block Diagram
 
-![Power Distribution Block Diagram](/.github/profile/images/power_block.png)
+![Power Distribution Block Diagram]({{ site.baseurl }}/assets/images/posts/2025-10-27-stratosonde-power-calculator/power_block.png)
 
 The system uses a **BQ25570 energy harvester IC** as the central power management component:
 
@@ -47,7 +47,7 @@ Unlike many designs that power components directly from battery voltage, the Str
 
 ### Operation Sequence Diagram
 
-![Operation Sequence Diagram](/.github/profile/images/power_sequence.png)
+![Operation Sequence Diagram]({{ site.baseurl }}/assets/images/posts/2025-10-27-stratosonde-power-calculator/power_sequence.png)
 
 The calculator shows the precise timing of operations during each telemetry cycle:
 

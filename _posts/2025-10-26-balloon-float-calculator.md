@@ -12,7 +12,7 @@ I'm excited to announce the launch of our new interactive Balloon Float Calculat
 
 **[Try the Calculator Now →](https://stratosonde.github.io/.github/profile/float1g_visual.html)**
 
-![Balloon Float Calculator Interface](/.github/profile/images/float.png)
+![Balloon Float Calculator Interface]({{ site.baseurl }}/assets/images/posts/2025-10-26-balloon-float-calculator/float.png)
 
 ## Understanding Balloon Physics: The Swimming Pool Analogy
 
