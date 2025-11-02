@@ -123,6 +123,7 @@ Whether you're an embedded systems expert, a high-altitude balloon enthusiast, o
 - 📝 **This Blog**: Weekly updates on development progress
 - 💬 **Discord**: [https://discord.gg/CdqQqW7n](https://discord.gg/CdqQqW7n)
 - 🐙 **GitHub**: [@stratosonde](https://github.com/stratosonde)
+- 📧 **Email**: [info@stratosonde.org](mailto:info@stratosonde.org)
 - 🎈 **Community**: Join the high-altitude balloon and amateur radio communities
 
 ## Acknowledgments
