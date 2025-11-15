@@ -2,6 +2,7 @@
 layout: post
 title: "New Interactive Balloon Float Calculator"
 date: 2025-10-26 12:00:00 -0600
+updated: 2025-11-14 20:43:00 -0700
 categories: tools
 tags: [calculator, balloon, float, superpressure, physics]
 ---
@@ -9,6 +10,17 @@ tags: [calculator, balloon, float, superpressure, physics]
 # Introducing the Balloon Float Calculator
 
 I'm excited to announce the launch of our new interactive Balloon Float Calculator, a comprehensive educational tool for designing superpressure balloon flights. This calculator replaces our previous float calculator with a more detailed, step-by-step approach that helps users understand the physics behind balloon flight.
+
+## Recent Updates (November 14, 2025)
+
+The calculator has been significantly enhanced with several major improvements:
+
+- **Physics validation** - All calculations now validated against the [Stratosonde Python Predictor](https://predictor.stratosonde.org) for accuracy
+- **Mylar balloon focus** - Updated for spherical mylar superpressure balloons with proper burst pressure specifications (8-15 kPa typical, 15-25 kPa heavy-duty aerospace)
+- **Enhanced pressure visualization** - Pressure chart now displays altitude on y-axis for more intuitive atmospheric profile (like standard meteorological soundings)
+- **Clearer physics explanations** - New intuition boxes explain the critical distinction between net force (goes to zero at float) vs pressure differential (maximum at float)
+- **Three interactive charts** - Added volume/ascent rate and force analysis visualizations alongside the pressure chart
+- **Step-by-step calculations** - Each physics step now shows the actual equations and values used
 
 **[Try the Calculator Now →](https://stratosonde.github.io/.github/profile/float1g_visual.html)**
 
@@ -120,22 +132,29 @@ Rather than just showing final numbers, the calculator walks through each stage:
 
 ### Safety First
 
-The calculator provides clear safety guidance:
+The calculator provides clear safety guidance for mylar superpressure balloons:
 
-- ✅ **Safe** (< 4.0 kPa) - Conservative safety margin
-- ⚠️ **Caution** (4.0-4.7 kPa) - Approaching burst limit, careful monitoring needed
-- 🛑 **Danger** (≥ 4.7 kPa) - At or above burst limit, redesign required
+- ✅ **Safe** (< 6 kPa) - Conservative safety margin for typical mylar balloons
+- ⚠️ **Caution** (6-8 kPa) - Approaching burst limit, careful monitoring needed
+- 🛑 **Danger** (≥ 8 kPa) - At or above typical burst limit, redesign required
 
-Based on empirical data from Qualatex 36" balloon burst testing at 4.7-5.4 kPa differential pressure.
+**Mylar Balloon Specifications:**
+- **Typical mylar superpressure balloons:** 8-15 kPa burst pressure (polyester film with metallic coating)
+- **Heavy-duty aerospace mylar:** 15-25 kPa burst pressure (multi-layer construction)
+- Sealing quality is critical - always test pressurize on ground before flight to check seam integrity
 
-## Based on UKHAS SPLAT
+## Physics Validation & Heritage
 
-This calculator builds upon the excellent [UKHAS SPLAT float1g calculator](https://ukhas.org.uk/doku.php?id=projects:splat), which has been used by the high-altitude balloon community for years. We've enhanced it with:
+This calculator builds upon the excellent [UKHAS SPLAT float1g calculator](https://ukhas.org.uk/doku.php?id=projects:splat), which has been used by the high-altitude balloon community for years. All physics calculations have been validated against the [Stratosonde Python Predictor](https://predictor.stratosonde.org) to ensure accuracy.
+
+We've enhanced the original SPLAT calculator with:
 
 - Modern, responsive interface
-- Step-by-step educational explanations
-- Visual pressure analysis chart
+- Step-by-step educational explanations with intuition boxes
+- Three interactive charts (pressure analysis, volume/ascent rate, force analysis)
 - Real-time safety feedback
+- Physics validation against full trajectory predictor
+- Detailed calculation breakdowns showing equations and values
 
 ## Try It Out
 
@@ -153,10 +172,21 @@ The calculator is built with:
 
 Thanks to the UKHAS community for their pioneering work on balloon flight calculators and for sharing their knowledge openly. This tool stands on the shoulders of their excellent documentation and community wisdom.
 
+## Full Trajectory Prediction
+
+While this calculator provides the equilibrium state (where the balloon will float), for complete multi-day flight predictions including:
+- Diurnal altitude oscillations (±500-2000 m from thermal cycles)
+- Real-time wind field evolution
+- Time-dependent thermal dynamics
+- Complete trajectory tracking over days/weeks
+
+Use the full [Stratosonde Python Predictor](https://predictor.stratosonde.org) for detailed trajectory simulation.
+
 ## What's Next
 
 Potential future enhancements:
 - Export/save calculator configurations
 - Multiple balloon comparison mode
+- Integration with real-time atmospheric data
 
 Happy ballooning, and stay safe!
