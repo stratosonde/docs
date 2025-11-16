@@ -7,8 +7,8 @@ description: >-
 url: "https://docs.stratosonde.org"
 baseurl: ""
 
-# Theme
-theme: jekyll-theme-chirpy
+# Theme (use remote_theme for GitHub Pages compatibility)
+remote_theme: cotes2020/jekyll-theme-chirpy
 
 # Author/Avatar
 avatar: /assets/img/stratosonde_both.png
