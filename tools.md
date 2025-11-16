@@ -1,8 +1,7 @@
 ---
 layout: page
 title: Tools
-icon: fas fa-tools
-order: 3
+permalink: /tools/
 ---
 
 # Interactive Tools

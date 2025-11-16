@@ -7,43 +7,31 @@ description: >-
 url: "https://docs.stratosonde.org"
 baseurl: ""
 
-# Theme (use remote_theme for GitHub Pages compatibility)
-remote_theme: cotes2020/jekyll-theme-chirpy
+# Theme with dark mode
+theme: minima
+minima:
+  skin: dark
+  
+# Navigation - show About and Tools in header
+header_pages:
+  - about.md
+  - tools.md
 
-# Author/Avatar
-avatar: /assets/img/stratosonde_both.png
-
-# Timezone
-timezone: America/Edmonton
-lang: en
-
-# Theme mode (leave blank to auto-detect user preference, defaults to dark)
-theme_mode:
-
-# Social links
-github:
-  username: stratosonde
-
-social:
+# Author
+author:
   name: Stratosonde Project
   email: info@stratosonde.org
-  links:
-    - https://github.com/stratosonde
-    - https://discord.gg/CdqQqW7n
+
+# Social links
+github_username: stratosonde
 
 # Plugins
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
-  - jekyll-sitemap
-  - jekyll-paginate
-
-# Pagination
-paginate: 10
 
 # Build settings
 markdown: kramdown
-highlighter: rouge
 
 # Exclude from processing
 exclude:
