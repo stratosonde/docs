@@ -1,0 +1,76 @@
+---
+---
+
+@import "minima";
+
+/* Dark mode override for Minima */
+body {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+.site-header {
+  background-color: #2d2d2d;
+  border-bottom-color: #404040;
+}
+
+.site-title, .site-title:visited {
+  color: #e0e0e0;
+}
+
+.site-nav .page-link {
+  color: #e0e0e0;
+}
+
+.site-nav .page-link:hover {
+  color: #ffffff;
+}
+
+.post-link {
+  color: #4da6ff;
+}
+
+.post-link:visited {
+  color: #b366ff;
+}
+
+a {
+  color: #4da6ff;
+}
+
+a:visited {
+  color: #b366ff;
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+  color: #ffffff;
+}
+
+code {
+  background-color: #2d2d2d;
+  color: #e85c5c;
+}
+
+pre {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+.site-footer {
+  background-color: #2d2d2d;
+  border-top-color: #404040;
+  color: #999;
+}
+
+table {
+  border-color: #404040;
+}
+
+th, td {
+  border-color: #404040;
+}
+
+blockquote {
+  border-left-color: #666;
+  color: #999;
+}
