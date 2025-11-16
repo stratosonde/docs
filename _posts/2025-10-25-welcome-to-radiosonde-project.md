@@ -1,142 +1,103 @@
 ---
 layout: post
-title: "Welcome to the Stratosonde Project"
+title: "Welcome to the Stratosonde Development Blog"
 date: 2025-10-25 14:57:00 +0000
 categories: announcement
-tags: [getting-started, stratosonde, radiosonde, high-altitude, balloons]
+tags: [announcement, development, open-source]
 author: englotk
 ---
 
-# Welcome to the Stratosonde Project
+Welcome to the Stratosonde development blog - where we document the engineering challenges of building an ultra-lightweight, solar-powered radiosonde for multi-day stratospheric flights.
 
-Welcome to the technical blog for the **Stratosonde Project**—an ambitious open-source effort to design and build ultra-lightweight, solar-powered radiosondes capable of long-duration autonomous flights in the stratosphere.
+## Why Document Everything?
 
-## The Vision: Ultra-Long-Duration Stratospheric Flight
+Building a <15g platform that survives days at -50°C in the stratosphere requires solving problems most embedded systems never face. By documenting design decisions, test results, and failures openly, we:
 
-Imagine a radiosonde weighing less than 15 grams that can:
-- Float autonomously at 40,000 feet for days or weeks
-- Survive extreme temperatures (-50°C to +60°C)
-- Navigate global LoRaWAN regions automatically
-- Harvest solar energy to extend mission duration
-- Transmit real-time atmospheric data via LoRaWAN
+- Create a knowledge base for others tackling similar challenges
+- Enable peer review and improvement of our approaches
+- Demonstrate that complex aerospace projects are accessible beyond large institutions
+- Build a community around open atmospheric science
 
-This is the Stratosonde—a next-generation high-altitude balloon payload that pushes the boundaries of what's possible with minimal hardware.
+## What We're Building
 
-## Why This Matters
+An autonomous radiosonde weighing less than 15 grams that can:
+- Float at 12-18km altitude for extended periods
+- Harvest solar energy through extreme temperature cycles
+- Detect and adapt to global LoRaWAN regulatory regions automatically
+- Log and transmit atmospheric measurements opportunistically
 
-Traditional radiosondes are single-use devices that provide a few hours of data before falling back to Earth. The Stratosonde aims to change that paradigm by creating a platform that can:
+## Validation First
 
-**Collect Extended Atmospheric Data**: Days or weeks of continuous measurements at stratospheric altitudes provide unprecedented insight into atmospheric dynamics, weather patterns, and climate phenomena.
+Our first missions focus on proving the platform itself:
+- Do our thermal models predict actual temperatures accurately?
+- Can we sustain operation through full day/night cycles?
+- Do trajectory predictions match real flight paths?
+- Does autonomous region detection work globally?
 
-**Enable Citizen Science**: By making the design open-source and accessible, we're democratizing high-altitude atmospheric research. Amateur radio operators, students, and hobbyists can contribute to meaningful scientific data collection.
+Only after validating these fundamentals will we focus on atmospheric science objectives.
 
-**Advance Balloon Technology**: The innovations developed here—from solar power management at extreme temperatures to autonomous region detection—benefit the entire high-altitude balloon community.
+## What to Expect from This Blog
 
-**Reduce Environmental Impact**: Long-duration flights mean fewer launches and less hardware falling back to Earth.
+**Technical Deep-Dives**  
+Detailed explanations of subsystems: power management, thermal modeling, H3 geospatial indexing, LoRaWAN communication, sensor integration
 
-## What Makes This Challenging
+**Design Decisions**  
+Why we chose specific components, architectures, and approaches - including what didn't work
 
-Building a device that survives weeks in the stratosphere requires solving problems most embedded systems never face:
+**Test Results**  
+Ground testing data, component characterization, and flight telemetry analysis
 
-- **Extreme Cold**: At -50°C, lithium batteries lose 50% of their capacity and electronics behave unpredictably
-- **Solar Power at Altitude**: Managing tiny solar panels (50mW) through boost converters while handling day/night cycles
-- **Global Autonomy**: Automatically detecting and switching LoRaWAN regions as the balloon drifts across continents
-- **Weight Constraints**: Every gram matters when you're trying to stay aloft—total system weight under 15g
-- **Firmware Reliability**: No ability to update or debug once launched; it must work perfectly from day one
+**Tools & Resources**  
+Interactive calculators, visualization tools, and utilities we've built
 
-## The Technology Stack
+**Progress Updates**  
+Regular status reports on firmware development, hardware iterations, and integration testing
 
-### Hardware
-- **MCU**: STM32WLE5 (ARM Cortex-M4 with integrated LoRa radio)
-- **Power**: BQ25570 energy harvester + 2S LTO batteries + solar panels
-- **Sensors**: SHT31 (temp/humidity), MS5607 (pressure/altitude), GPS
-- **Target Weight**: <15 grams total system
+## Building on Community Foundation
 
-### Firmware
-- Real-time operating system for coordinated power management
-- Autonomous LoRaWAN region detection using H3Lite geospatial indexing
-- Adaptive transmission scheduling based on battery state
-- Flash-based data logging for telemetry backup
+This work stands on decades of innovation by amateur radio operators and the picoballoon community. They proved ultra-lightweight stratospheric platforms are possible. We're extending their work with:
 
-### Software Tools
-- **H3Lite Library**: Embedded H3 geospatial indexing for automatic region detection
-- **Power Budget Calculator**: Interactive tool for system design and optimization
-- **Balloon Float Calculator**: Physics-based altitude prediction
-- **Cesium Visualization**: Real-time LoRaWAN region mapping
+- Autonomous LoRaWAN region detection via embedded H3 geospatial indexing
+- Validated thermal and power models through structured testing
+- Scientific methodology for reproducible measurements
+- Open documentation accessible to newcomers
 
-## Recent Progress
+## Get Involved
 
-We've already made significant strides:
+**Follow Development**
+- Subscribe to this blog for technical updates
+- Join our [Discord](https://discord.gg/CdqQqW7n) for real-time discussion
+- Watch repositories on [GitHub](https://github.com/stratosonde)
 
-✅ **H3Lite Library**: Completed embedded implementation of H3 geospatial indexing (<50KB flash)
-✅ **Interactive Calculators**: Power budget and balloon float design tools now live
-✅ **Region Detection**: Autonomous LoRaWAN region switching working in firmware
-✅ **Cesium Visualization**: Interactive 3D globe showing all LoRaWAN regions
+**Contribute**
+- Review hardware designs and firmware code
+- Test our calculators and share feedback
+- Propose improvements and optimizations
+- Build your own platform and share results
 
-Check out the recent blog posts for deep dives into these technologies!
+**Ask Questions**
+- No question is too basic - if something's unclear, ask
+- Help us improve documentation by pointing out gaps
+- Share your expertise in relevant domains
 
-## Join the Community
+## Coming Posts
 
-This project thrives on collaboration and open discussion. We'd love to have you join us:
+Look for upcoming deep-dives on:
+- Power system architecture and solar harvesting optimization
+- H3Lite: Embedded geospatial indexing for region detection
+- Thermal modeling for extreme cold operation
+- Flight trajectory prediction and validation
+- LoRaWAN reception analysis from altitude
 
-**💬 Discord Server**: Join our active community for real-time discussions, questions, and collaboration  
-**[https://discord.gg/CdqQqW7n](https://discord.gg/CdqQqW7n)**
+## Project Resources
 
-**📁 GitHub**: All code, hardware designs, and documentation are open source  
-- [Stratosonde Organization](https://github.com/stratosonde)
-- [Firmware Repository](https://github.com/stratosonde/sonde)
-- [H3Lite Library](https://github.com/stratosonde/h3lite)
-- [Documentation](https://github.com/stratosonde/docs)
-
-**📊 Project Specification**: Detailed requirements and architecture  
-**[Stratosonde.pdf](https://stratosonde.github.io/Stratosonde.pdf)**
-
-## What's Coming Next
-
-The blog will cover:
-
-- **Technical Deep Dives**: Detailed explanations of how each subsystem works
-- **Design Decisions**: Why we chose specific components and architectures
-- **Testing Results**: Real-world performance data from development and flights
-- **Lessons Learned**: What worked, what didn't, and how we solved problems
-- **Community Contributions**: Showcasing work from project contributors
-
-Upcoming posts you can look forward to:
-- Firmware architecture and power management strategies
-- Cold-temperature battery performance testing
-- Solar panel efficiency at altitude
-- LoRaWAN gateway reception analysis
-- First flight results and telemetry analysis
-
-## How to Contribute
-
-Whether you're an embedded systems expert, a high-altitude balloon enthusiast, or just curious about the technology:
-
-- **Ask Questions**: Join the Discord and participate in discussions
-- **Review Code**: Check out the repositories and provide feedback
-- **Test Designs**: Build your own Stratosonde and share results
-- **Improve Documentation**: Help make the project more accessible
-- **Share Ideas**: Propose enhancements or new features
-
-## Stay Connected
-
-- 📝 **This Blog**: Weekly updates on development progress
-- 💬 **Discord**: [https://discord.gg/CdqQqW7n](https://discord.gg/CdqQqW7n)
-- 🐙 **GitHub**: [@stratosonde](https://github.com/stratosonde)
-- 📧 **Email**: [info@stratosonde.org](mailto:info@stratosonde.org)
-- 🎈 **Community**: Join the high-altitude balloon and amateur radio communities
-
-## Acknowledgments
-
-This project builds on decades of work by the high-altitude balloon community, amateur radio operators, and open-source hardware developers. Special thanks to:
-
-- The UKHAS community for pioneering picoballoon technology
-- The LoRa/LoRaWAN developer community
-- Uber's H3 team for their excellent geospatial indexing system
-- The amateur radio community for their extensive documentation
+- **Landing Page**: [github.com/stratosonde/.github](https://github.com/stratosonde/.github) - Mission overview
+- **Documentation**: This site - Technical details and progress
+- **Interactive Tools**: Calculators for balloon design and power budgeting
+- **Repositories**: All code and hardware designs open source
 
 ---
 
-**Ready to explore?** Check out the latest posts on the [blog homepage]({{ site.baseurl }}/) or jump straight into the [H3Lite deep dive]({{ site.baseurl }}/technical/firmware/2025/10/29/h3lite-lorawan-region-detection.html)!
+Thanks for joining us on this journey. Whether you're here to learn, contribute, or just follow along - welcome aboard.
 
-Let's push the boundaries of what's possible with high-altitude balloons. Welcome aboard! 🎈
+Let's see what we can accomplish with 15 grams and open collaboration.
