@@ -1,98 +1,59 @@
-// Theme Toggle Implementation
-// Supports system preference detection and manual override with localStorage persistence
-
+// Simple theme toggle implementation
 (function() {
   'use strict';
 
   const STORAGE_KEY = 'theme-preference';
-  const THEME_ATTR = 'data-theme';
   
-  // Get stored theme preference or detect system preference
-  function getPreferredTheme() {
+  // Get theme from localStorage or system preference
+  function getTheme() {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      return stored;
-    }
+    if (stored) return stored;
     
-    // Detect system preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    
-    return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
   
   // Apply theme to document
-  function applyTheme(theme) {
-    document.body.setAttribute(THEME_ATTR, theme);
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
     localStorage.setItem(STORAGE_KEY, theme);
-    updateToggleButton(theme);
-  }
-  
-  // Update toggle button icon
-  function updateToggleButton(theme) {
-    const button = document.querySelector('.theme-toggle');
-    if (!button) return;
     
-    if (theme === 'dark') {
-      button.innerHTML = '☀️';
-      button.setAttribute('aria-label', 'Switch to light mode');
-      button.setAttribute('title', 'Switch to light mode');
-    } else {
-      button.innerHTML = '🌙';
-      button.setAttribute('aria-label', 'Switch to dark mode');
-      button.setAttribute('title', 'Switch to dark mode');
+    // Update button
+    const button = document.querySelector('.theme-toggle');
+    if (button) {
+      if (theme === 'dark') {
+        button.textContent = '☀️';
+        button.setAttribute('aria-label', 'Switch to light mode');
+      } else {
+        button.textContent = '🌙';
+        button.setAttribute('aria-label', 'Switch to dark mode');
+      }
     }
   }
   
-  // Toggle between themes
+  // Toggle theme
   function toggleTheme() {
-    const currentTheme = document.body.getAttribute(THEME_ATTR) || getPreferredTheme();
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    applyTheme(newTheme);
+    const current = getTheme();
+    const next = current === 'dark' ? 'light' : 'dark';
+    setTheme(next);
   }
   
-  // Initialize theme on page load
-  function initTheme() {
-    const theme = getPreferredTheme();
-    applyTheme(theme);
-  }
-  
-  // Listen for system theme changes
-  function watchSystemTheme() {
-    if (!window.matchMedia) return;
+  // Initialize on page load
+  function init() {
+    const theme = getTheme();
+    setTheme(theme);
     
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    // Only react to system changes if user hasn't set a manual preference
-    mediaQuery.addEventListener('change', (e) => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        applyTheme(e.matches ? 'dark' : 'light');
-      }
-    });
-  }
-  
-  // Setup event listeners
-  function setupToggleButton() {
+    // Add click handler to button
     const button = document.querySelector('.theme-toggle');
     if (button) {
       button.addEventListener('click', toggleTheme);
     }
   }
   
-  // Initialize on DOM ready
+  // Run init when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      initTheme();
-      setupToggleButton();
-      watchSystemTheme();
-    });
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initTheme();
-    setupToggleButton();
-    watchSystemTheme();
+    init();
   }
-  
-  // Expose toggle function globally for manual use if needed
-  window.toggleTheme = toggleTheme;
 })();
