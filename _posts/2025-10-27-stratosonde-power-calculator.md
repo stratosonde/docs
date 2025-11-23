@@ -224,31 +224,15 @@ This calculator is valuable for:
 - **Trade-off Analysis**: Balance power, weight, and performance requirements
 - **Failure Analysis**: Understand why existing designs failed to meet duration goals
 
-## Based on Real Flight Experience
+## Design Foundations
 
-This calculator incorporates lessons learned from actual high-altitude balloon flights, including:
+This calculator is based on:
 
-- Accurate cold-temperature battery derating factors
-- Realistic solar panel positioning losses
-- Measured component power consumption values
-- Buck converter efficiency under varying loads
-- Internal impedance effects on system operation
-
-## Technical Details
-
-The calculator is built with:
-- Pure JavaScript for client-side calculations
-- Chart.js for interactive visualizations
-- Responsive CSS design for mobile and desktop
-- SVG diagrams for system architecture
-- Real-time parameter updates with instant recalculation
-
-All calculations are based on first principles:
-- Energy = Current × Time
-- Power conversion efficiency accounting
-- Duty cycle averaging
-- Day/night cycle simulation
-- Voltage droop from Ohm's law (V = I × R)
+- Component datasheet specifications and characterization measurements
+- Published research on cold-temperature battery performance
+- Solar panel modeling and positioning analysis
+- Power management IC application notes (BQ25570)
+- Community knowledge from the picoballoon and amateur radio communities
 
 ## What's Next
 
@@ -289,7 +273,7 @@ Special thanks to the picoballoon and amateur radio communities for sharing thei
 ## For More Information
 
 To learn more about the Stratosonde project:
-- [Project Specification](https://stratosonde.github.io/Stratosonde.pdf) - Complete hardware and firmware requirements
-- [Power Management Documentation](https://github.com/stratosonde/sonde/blob/main/firmware/docs/PowerManagement.md) - Detailed firmware implementation
+- [Project Specification](https://github.com/stratosonde/.github/blob/main/Stratosonde.pdf) - Complete hardware and firmware requirements
+- [Power Management Documentation](https://github.com/stratosonde/firmware/blob/main/docs/PowerManagement.md) - Detailed firmware implementation
 
 Happy calculating, and may your radiosondes fly long and far!
