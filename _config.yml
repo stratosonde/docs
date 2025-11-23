@@ -45,3 +45,10 @@ exclude:
   - vendor/ruby/
   - .gitignore
   - README.md
+
+# Defaults - ensure all posts use the post layout with MathJax
+defaults:
+  - scope:
+      path: "_posts"
+    values:
+      layout: "post"
