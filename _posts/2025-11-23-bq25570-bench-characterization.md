@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "BQ25570 Bench Characterization: Validating Energy Harvesting for Ultra-Low Voltage Solar Cells"
-date: 2025-11-23 12:00:00 -0700
+date: 2025-11-23 08:00:00 -0700
 categories: hardware power testing
 tags: [bq25570, energy harvesting, solar, power, mppt, boost converter, characterization, testing]
 ---
