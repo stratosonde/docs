@@ -39,7 +39,7 @@ Interactive 3D globe showing worldwide LoRaWAN regulatory regions with H3 hexago
 - Interactive globe navigation
 - Region metadata and specifications
 
-### [Atmospheric Flow Viewer](https://stratosonde.github.io/atmospheric-flow-viewer.html)
+### [Atmospheric Flow Viewer](https://stratosonde.github.io/.github/profile/atmospheric-flow-viewer.html)
 Real-time NOAA GFS wind data visualization at multiple pressure levels for trajectory prediction.
 
 **Features:**
@@ -52,5 +52,4 @@ Real-time NOAA GFS wind data visualization at multiple pressure levels for traje
 
 All tools are open source and available in the project repositories:
 - [Calculators](https://github.com/stratosonde/.github/tree/main/profile) - HTML/JavaScript visualization tools
-- [Python Tools](https://github.com/stratosonde/sonde) - Data processing and analysis utilities
 - [H3 Library](https://github.com/stratosonde/h3lite) - Geospatial indexing for embedded systems

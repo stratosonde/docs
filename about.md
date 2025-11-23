@@ -49,10 +49,12 @@ Stratosonde builds on decades of work by the amateur radio and picoballoon commu
 - Build your own platform
 
 **Repositories**
-- [sonde](https://github.com/stratosonde/sonde) - Core firmware
-- [h3lite](https://github.com/stratosonde/h3lite) - Geospatial indexing library
-- [hardware](https://docs.google.com/document/d/1UvLQhTHOeyt-fdj2o6CyQJJvrkRZcYuKuNxAXdWrK4A/edit?usp=sharing) - PCB designs
-- [docs](https://github.com/stratosonde/docs) - This site
+- [firmware](https://github.com/stratosonde/firmware)
+- [hardware](https://github.com/stratosonde/hardware)
+- [h3lite](https://github.com/stratosonde/h3lite)
+- [ground](https://github.com/stratosonde/ground)
+- [docs](https://github.com/stratosonde/docs)
+- [.github](https://github.com/stratosonde/.github)
 
 ## Project Background
 
