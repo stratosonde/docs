@@ -78,7 +78,7 @@ To quantify performance across the stratospheric temperature range, cells were s
 
 The two-point current measurement allows calculation of effective internal resistance:
 
-\[ R_{int} = \frac{V_{high} - V_{low}}{I_{low} - I_{high}} \]
+$ R_{int} = \frac{V_{high} - V_{low}}{I_{low} - I_{high}} $
 
 This DC resistance measurement captures all loss mechanisms: ionic resistance in electrolyte, charge transfer resistance at electrodes, electronic resistance in current collectors, and contact resistance. Unlike AC impedance spectroscopy, this represents the actual resistance the battery presents to pulsed loads like radio transmissions.
 
@@ -173,8 +173,8 @@ Consider a conventional single-cell battery architecture operating at -60°C:
 
 Using Ohm's law:
 
-\[ V_{load} = V_{oc} - I_{load} \times R_{int} \]
-\[ V_{load} = 1.5V - (0.05A \times 8Ω) = 1.5V - 0.4V = 1.1V \]
+$ V_{load} = V_{oc} - I_{load} \times R_{int} $
+$ V_{load} = 1.5V - (0.05A \times 8Ω) = 1.5V - 0.4V = 1.1V $
 
 But this assumes the cell can deliver 50mA. In reality, at -60°C the cell struggles to sustain even 0.2mA as shown in the test data. Attempting to draw 50mA would cause voltage collapse to near-zero.
 
@@ -218,25 +218,25 @@ The supercapacitor serves as a low-ESR energy reservoir that decouples high-curr
 
 During the long idle periods between transmissions (minutes), the battery slowly charges the supercapacitor through its high internal resistance:
 
-\[ I_{trickle} = \frac{V_{batt} - V_{cap}}{R_{batt}} \]
+$ I_{trickle} = \frac{V_{batt} - V_{cap}}{R_{batt}} $
 
 At -60°C with Rbatt ≈ 16Ω:
-\[ I_{trickle} = \frac{2.0V - 1.8V}{16Ω} = 12.5 mA \]
+$ I_{trickle} = \frac{2.0V - 1.8V}{16Ω} = 12.5 mA $
 
 This 12.5mA trickle current slowly accumulates energy in the supercapacitor over the 5-minute inter-transmission interval:
 
-\[ Q = I \times t = 0.0125A \times 300s = 3.75 C \]
-\[ E = \frac{1}{2}CV^2 = \frac{1}{2}(0.22F)(1.8V)^2 = 0.356 J \]
+$ Q = I \times t = 0.0125A \times 300s = 3.75 C $
+$ E = \frac{1}{2}CV^2 = \frac{1}{2}(0.22F)(1.8V)^2 = 0.356 J $
 
 During transmission, the supercapacitor delivers the required current burst:
 
 **Radio Transmission (400ms at 100mA average):**
-\[ E_{transmission} = P \times t = (3.3V \times 0.1A) \times 0.4s = 0.132 J \]
+$ E_{transmission} = P \times t = (3.3V \times 0.1A) \times 0.4s = 0.132 J $
 
 The supercapacitor can support **20+ transmissions** from stored energy alone, even if the battery is completely unable to deliver current during the burst.
 
 **Voltage Sag During Transmission:**
-\[ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.1A \times 0.4s}{0.22F} = 0.182V \]
+$ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.1A \times 0.4s}{0.22F} = 0.182V $
 
 Only 182mV voltage drop during transmission—still manageable and far better than the multi-volt sag the battery would experience.
 
@@ -266,15 +266,15 @@ A boost converter *could* work with a single LTO cell, but:
 **Why Buck Instead of LDO?**
 
 A linear LDO would waste power as heat:
-\[ P_{wasted} = (V_{in} - V_{out}) \times I_{load} \]
+$ P_{wasted} = (V_{in} - V_{out}) \times I_{load} $
 
 At 5V input, 3.3V output, 20mA load:
-\[ P_{wasted} = (5V - 3.3V) \times 0.02A = 0.034W = 34mW \]
+$ P_{wasted} = (5V - 3.3V) \times 0.02A = 0.034W = 34mW $
 
 That's comparable to the entire system load budget! At -60°C where every milliwatt of solar harvesting is precious, efficiency matters.
 
 Buck converter at 85% efficiency:
-\[ P_{wasted} = P_{out} \times \frac{1-\eta}{\eta} = (3.3V \times 0.02A) \times \frac{0.15}{0.85} = 11.6mW \]
+$ P_{wasted} = P_{out} \times \frac{1-\eta}{\eta} = (3.3V \times 0.02A) \times \frac{0.15}{0.85} = 11.6mW $
 
 The buck converter saves **22mW** compared to LDO—enough to extend mission duration by hours.
 
@@ -352,23 +352,23 @@ The catastrophic performance degradation below -50°C drives thermal management 
 **Active Thermal Management:**
 - Waste heat from electronics directed toward battery
 - Inefficiency in buck converter becomes *useful*: 
-  \[ P_{heat} = P_{in} - P_{out} \approx 3-5mW \]
+  $ P_{heat} = P_{in} - P_{out} \approx 3-5mW $
 - During transmission, resistive heating in radio PA
 
 **Worst-Case Analysis:**
 
 At -60°C ambient, solar warming can raise cell temperature:
 
-\[ T_{cell} = T_{ambient} + \Delta T_{solar} \]
+$ T_{cell} = T_{ambient} + \Delta T_{solar} $
 
 Assuming 10% of solar power absorbed as heat:
-\[ P_{absorbed} = 0.10 \times 100mW = 10mW \]
+$ P_{absorbed} = 0.10 \times 100mW = 10mW $
 
 Thermal resistance to ambient (estimate):
-\[ R_{thermal} \approx 20 °C/W \text{ (small package in still air)} \]
+$ R_{thermal} \approx 20 °C/W \text{ (small package in still air)} $
 
 Temperature rise:
-\[ \Delta T = P \times R = 0.01W \times 20°C/W = 0.2°C \]
+$ \Delta T = P \times R = 0.01W \times 20°C/W = 0.2°C $
 
 Disappointingly small. Solar warming alone won't lift the battery out of the catastrophic regime.
 
@@ -414,8 +414,8 @@ During peak solar illumination when batteries are fully charged, excess solar po
 This active thermal management uses the problem (excess solar power) as the solution (battery heating). At midday when solar cells produce maximum power, the batteries get maximum warming—exactly when transmission activity is highest.
 
 Combined effect estimate:
-\[ T_{cell} = T_{ambient} + \Delta T_{mylar} + \Delta T_{solar} + \Delta T_{zener} \]
-\[ T_{cell} \approx -56.5°C + 10°C + 5°C + 10°C = -31.5°C \]
+$ T_{cell} = T_{ambient} + \Delta T_{mylar} + \Delta T_{solar} + \Delta T_{zener} $
+$ T_{cell} \approx -56.5°C + 10°C + 5°C + 10°C = -31.5°C $
 
 If successful, this could keep the cells above -40°C, maintaining them in the degraded-but-functional regime rather than the catastrophic regime.
 
@@ -455,7 +455,7 @@ In this mode, the platform continues collecting science data but defers transmis
 
 The system continuously monitors battery voltage and available power:
 
-\[ P_{available} = \frac{(V_{batt} - V_{min})^2}{4 \times R_{batt}} \]
+$ P_{available} = \frac{(V_{batt} - V_{min})^2}{4 \times R_{batt}} $
 
 When \( P_{available} > P_{transmission} \), the system exits low-power mode and resumes normal operation, uploading the backlog of stored telemetry.
 
@@ -538,7 +538,7 @@ The characterization data validates the Stratosonde power architecture margins:
 - Total nighttime consumption: 20mW × 12hr + 19.0 J = 240mWh + 19.0 J = 883 J
 
 **Net Balance:**
-\[ E_{net} = 1512 J - 883 J = 629 J \text{ surplus} \]
+$ E_{net} = 1512 J - 883 J = 629 J \text{ surplus} $
 
 Even at -60°C with severely degraded battery performance and the increased power requirements (longer GPS fix time, higher transmission power), the system maintains positive energy balance. The 2S configuration with supercapacitor buffering ensures the battery's high internal resistance doesn't prevent charging during the day or discharging at night.
 
@@ -612,3 +612,4 @@ Sometimes the most valuable test result is the one that tells you your original 
 *Raw characterization data: [htc1015_temperature_test.xlsx]({{ site.baseurl }}/assets/data/htc1015_temperature_test.xlsx)*
 
 *HTC1015 Datasheet: [华慧规格书HTC1015-40(单电芯).pdf]({{ site.baseurl }}/assets/datasheets/HTC1015_datasheet.pdf)*
+
