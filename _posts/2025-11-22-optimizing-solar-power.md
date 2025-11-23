@@ -107,7 +107,7 @@ For system-level power budget calculations and runtime estimators, here are the 
 - Nighttime: **0 mW** (no solar charging)
 - Stratospheric conditions: Expect ~10-15% improvement due to colder temperatures (better cell efficiency) and reduced atmospheric absorption
 
-These values can be used directly in the [StratoSonde Power Budget Calculator]({{ site.baseurl }}/2025/10/27/stratosonde-power-calculator.html) to model mission duration and battery sizing.
+These values can be used directly in the [StratoSonde Power Budget Calculator](https://stratosonde.github.io/.github/profile/solar_radiosonde_power_budget.html) to model mission duration and battery sizing.
 
 ## Next Steps
 

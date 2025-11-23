@@ -16,9 +16,8 @@ header_pages:
   - tools.md
 
 # Author
-author:
-  name: Stratosonde Project
-  email: info@stratosonde.org
+author: Stratosonde Project
+email: info@stratosonde.org
 
 # Social links
 github_username: stratosonde
