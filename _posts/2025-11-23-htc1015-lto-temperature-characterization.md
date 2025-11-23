@@ -10,30 +10,27 @@ tags: [LTO, lithium titanate, battery, temperature, characterization, power arch
 
 At -60°C in the stratosphere, a battery is no longer just an energy storage device—it becomes a frozen electrochemical system barely capable of sustaining milliampere currents. The question isn't whether lithium batteries work at these temperatures; it's whether they work *well enough* to power a radio transmission every few minutes while being recharged by weak solar cells during the day.
 
-This characterization of the Huahui HTC1015 lithium titanate oxide (LTO) cells reveals both the promise and the brutal limitations of battery technology at stratospheric temperatures. The measurements quantify exactly how performance degrades from laboratory conditions at +25°C down to the -60°C thermal regime of the tropopause, and more importantly, drive the critical power architecture decisions that make StratoSonde viable.
+This characterization of the Huahui HTC1015 lithium titanate oxide (LTO) cells reveals both the promise and the brutal limitations of battery technology at stratospheric temperatures. The measurements quantify exactly how performance degrades from laboratory conditions at +25°C down to the -60°C thermal regime of the tropopause, and more importantly, drive the critical power architecture decisions that make Stratosonde viable.
 
 The data tells a clear story: below -50°C, battery performance doesn't just degrade—it enters a catastrophic regime where conventional single-cell architectures become fundamentally unworkable.
 
 ## Why LTO Instead of Conventional Li-ion?
 
-Standard lithium-ion batteries (LiCoO₂, NMC, LiFePO₄) offer high energy density—typically 150-250 Wh/kg—but they pay for it with fundamental limitations:
+Standard lithium-ion batteries offer high energy density but fail at stratospheric temperatures. The critical selection criteria for Stratosonde are:
 
-- **Narrow voltage range**: 3.0V - 4.2V leaves little margin for voltage sag under load
-- **Poor cold temperature performance**: Internal resistance skyrockets below 0°C
-- **Limited cycle life**: 500-1000 cycles before significant capacity fade
-- **Safety concerns**: Thermal runaway risk, especially during charging at low temperature
+**LTO Advantages:**
+- **Low-temperature charging capability**: Can charge below 0°C (essential for solar harvesting in stratosphere)
+- **Exceptional cycle life**: >2000 cycles supports 5+ years of daily charge/discharge cycling
+- **Safety**: Zero-strain crystal structure prevents dendrite formation and thermal runaway
+- **Wide voltage window**: 1.6V-2.8V provides more usable capacity range than Li-ion's 3.0V-4.2V
 
-Lithium titanate oxide (LTO) cells trade energy density for robustness:
+**Trade-offs:**
+- Lower energy density (60-80 Wh/kg vs. 150-250 Wh/kg for Li-ion)
+- Still degrades catastrophically below -50°C (but so do all rechargeable chemistries)
 
-- **Wider voltage window**: 1.6V - 2.8V provides more usable capacity range
-- **Better low-temperature capability**: Flatter resistance curve (until extreme cold)
-- **Exceptional cycle life**: >2000 cycles to 70% capacity, often exceeding 10,000 cycles
-- **Inherent safety**: Zero-strain crystal structure prevents dendrite formation
-- **Fast charge capability**: Can accept 2C+ charge rates without degradation
+For a 2.4g battery in a solar-powered platform, the energy density penalty is negligible compared to balloon and solar panel mass. The ability to survive thousands of cycles while being recharged in sub-zero conditions makes LTO the only viable choice.
 
-For StratoSonde, the cycle life advantage is critical. A balloon that transmits every 5 minutes accumulates 288 charge/discharge cycles per day. At 2000+ cycle rating, LTO cells can theoretically support a week-long mission with margin. Conventional Li-ion would be approaching end-of-life.
-
-The lower energy density (60-80 Wh/kg) is acceptable because the total battery mass at 2.4g per cell is negligible compared to balloon envelope and solar panel mass.
+A detailed comparison of all battery chemistries at extreme cold appears in the "Comparison to Other Battery Chemistries" section below.
 
 ## HTC1015 Specifications
 
@@ -54,8 +51,7 @@ The Huahui HTC1015 represents a Chinese-manufactured LTO cell optimized for smal
 - **Terminals**: Wire leads, ±0.6mm diameter, 10mm length
 
 **Cycle Life:**
-- **>2000 cycles** at 1.0C charge/discharge, maintaining >70% initial capacity
-- Test conditions: 1.0C to 2.8V charge, 1.0C to 1.5V discharge, 25°C
+- **>2000 cycles** at 1.0C charge/discharge
 
 **Temperature Ratings (from datasheet):**
 - **Charging**: 0°C to 40°C
@@ -69,7 +65,7 @@ That discharge temperature rating of "-10°C to 70°C" is about to be put to the
 To quantify performance across the stratospheric temperature range, cells were subjected to controlled temperature cycling while measuring voltage response to standardized current loads.
 
 **Test Setup:**
-- **Thermal Chamber**: Programmable environmental chamber with ±1°C stability
+- **Thermal Chamber**: Programmable environmental chamber
 - **Temperature Range**: +25°C to -60°C in 10°C steps, plus intermediate points
 - **Soak Time**: 2 hours at each temperature to ensure thermal equilibrium
 - **State of Charge**: Cells charged to approximately 70% SOC at room temperature before test
@@ -188,7 +184,7 @@ This isn't a battery problem—it's a physics problem. No amount of cell optimiz
 
 ## The 2S + Supercapacitor + Buck Architecture Solution
 
-The StratoSonde power architecture confronts the catastrophic cold performance head-on with a three-layer strategy:
+The Stratosonde power architecture confronts the catastrophic cold performance head-on with a three-layer strategy:
 
 ### Layer 1: 2S Battery Configuration
 
@@ -234,15 +230,15 @@ This 12.5mA trickle current slowly accumulates energy in the supercapacitor over
 
 During transmission, the supercapacitor delivers the required current burst:
 
-**Radio Transmission (100ms at 50mA average):**
-\[ E_{transmission} = P \times t = (3.3V \times 0.05A) \times 0.1s = 0.0165 J \]
+**Radio Transmission (400ms at 100mA average):**
+\[ E_{transmission} = P \times t = (3.3V \times 0.1A) \times 0.4s = 0.132 J \]
 
 The supercapacitor can support **20+ transmissions** from stored energy alone, even if the battery is completely unable to deliver current during the burst.
 
 **Voltage Sag During Transmission:**
-\[ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.05A \times 0.1s}{0.22F} = 0.023V \]
+\[ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.1A \times 0.4s}{0.22F} = 0.182V \]
 
-Only 23mV voltage drop during transmission—negligible compared to the multi-hundred millivolt sag the battery would experience.
+Only 182mV voltage drop during transmission—still manageable and far better than the multi-volt sag the battery would experience.
 
 ### Layer 3: Buck Converter to 3.3V
 
@@ -297,19 +293,19 @@ The 2S + supercap + buck architecture creates emergent capabilities that none of
 **Scenario 2: Darkness at -60°C**
 - No solar input
 - Battery provides trickle current to supercapacitor (10-15mA)
-- Supercapacitor sustains transmission bursts (50mA × 100ms every 5 min)
-- Average load: ~0.17mA continuous + ~0.3mA transmission average = 0.47mA
+- Supercapacitor sustains transmission bursts (100mA × 400ms every 5 min)
+- Average load: ~0.17mA continuous + ~1.1mA transmission average = 1.27mA
 - Battery capacity: 40mAh
-- **Runtime: ~85 hours** (3.5 days of continuous night operation)
+- **Runtime: ~31 hours** (1.3 days of continuous night operation)
 
 **Scenario 3: Extreme Cold, Degraded Battery (<-55°C)**
 - Battery can only provide 0.1-0.2mA continuous
 - Supercapacitor charges very slowly
-- Required energy per transmission: 0.0165J
+- Required energy per transmission: 0.132J
 - Charging period: 5 minutes = 300 seconds
-- Power needed: 0.0165J / 300s = 55μW
+- Power needed: 0.132J / 300s = 440μW
 - At 0.15mA, 2V average: 0.3mW available
-- **Still >5× margin** for transmission even at worst-case conditions
+- **Supercap requires ~2.2 minutes to accumulate energy** for one transmission from trickle charge
 
 The architecture remains viable even when the battery is essentially non-functional. The supercapacitor provides the peak power capability, the battery provides sustained energy storage, and the buck converter ensures stable voltage regardless of input variations.
 
@@ -350,17 +346,14 @@ Below -50°C, "capacity" becomes a misleading metric—the issue isn't stored en
 The catastrophic performance degradation below -50°C drives thermal management strategy:
 
 **Passive Thermal Design:**
-- Battery cells painted black to absorb solar radiation
-- Cells thermally coupled to solar panel (which also absorbs IR warming)
 - Minimal thermal mass (2.4g cells warm quickly)
-- Insulation from cold air flow (trapped air in electronics compartment)
+- Insulation from cold air flow (trapped air in reflective mylar)
 
-**Active Thermal Management (Future Consideration):**
+**Active Thermal Management:**
 - Waste heat from electronics directed toward battery
 - Inefficiency in buck converter becomes *useful*: 
   \[ P_{heat} = P_{in} - P_{out} \approx 3-5mW \]
 - During transmission, resistive heating in radio PA
-- Pre-transmission battery warming pulse?
 
 **Worst-Case Analysis:**
 
@@ -394,17 +387,17 @@ This presents a fundamental challenge: the HTC1015 characterization shows that b
 - Battery-free designs powered directly by solar + supercapacitor with no energy storage
 - Descent to warmer altitudes for battery recharge before ascending again
 
-StratoSonde attempts something different: continuous multi-day operation at stratospheric altitudes with solar-rechargeable battery storage. This requires aggressive thermal management to bridge the gap between -56.5°C ambient and the -40°C viability threshold.
+Stratosonde attempts something different: continuous multi-day operation at stratospheric altitudes with solar-rechargeable battery storage. This requires aggressive thermal management to bridge the gap between -56.5°C ambient and the -40°C viability threshold.
 
-### StratoSonde Thermal Management Strategy
+### Stratosonde Thermal Management Strategy
 
 **1. Mylar Thermal Enclosure**
 
-The battery cells are enclosed in a reflective mylar envelope that creates a micro-environment isolated from the ambient -56.5°C stratospheric temperature:
+The battery cells are enclosed in a mylar envelope (black exterior, silver interior) that creates a micro-environment isolated from the ambient -56.5°C stratospheric temperature:
 
-- **Radiative barrier**: Mylar reflects infrared radiation, reducing radiative heat loss
+- **Solar absorption**: Black exterior surface absorbs solar radiation
+- **Radiative barrier**: Silver interior reflects infrared radiation back toward cells, reducing heat loss
 - **Still air insulation**: Trapped air (minimal convection at 1% atmospheric pressure) provides thermal resistance
-- **Solar absorption**: Black-painted cells inside the envelope absorb solar radiation
 - **Minimal thermal mass**: 2.4g cells warm quickly with small heat inputs
 
 The mylar enclosure can potentially raise the internal temperature by 10-20°C above ambient through passive solar warming alone.
@@ -432,19 +425,19 @@ Even if thermal management fails and batteries remain at -56.5°C with 8Ω inter
 
 - **Trickle charging**: Battery provides 0.1-0.2mA continuous (all it can deliver at extreme cold)
 - **Energy accumulation**: Over 5-minute intervals, supercap stores: \( E = 0.15mA \times 2V \times 300s = 90mJ \)
-- **Transmission bursts**: LoRaWAN uplink requires ~16.5mJ per packet
-- **Margin**: Supercap can support 5+ transmissions from trickle-charged energy
+- **Transmission bursts**: LoRaWAN uplink requires ~132mJ per packet
+- **Challenge**: At slowest trickle charge, supercap needs ~7.5 minutes to accumulate enough energy
 
-The supercapacitor decouples the peak power requirement (radio transmission) from the battery's ability to deliver current. As long as the battery can provide *any* current—even 0.1mA—the system remains functional.
+The supercapacitor decouples the peak power requirement (radio transmission) from the battery's ability to deliver current. Even at worst-case trickle charge, transmissions can occur every 7-8 minutes rather than the nominal 5 minutes—a graceful degradation rather than complete failure.
 
 **4. Low Power Data-Logging Mode (Last Resort)**
 
-If thermal management cannot warm the batteries and solar power is insufficient to charge the supercapacitor, StratoSonde enters a power-conservation mode:
+If thermal management cannot warm the batteries and solar power is insufficient to charge the supercapacitor, Stratosonde enters a power-conservation mode:
 
 **Normal Operation:**
-- GPS position fix every 5 minutes: ~15mA for 30 seconds
+- GPS position fix every 5 minutes: ~15mA for 3 seconds
 - Environmental sensors (pressure, temperature, humidity): ~2mA for 10 seconds
-- LoRaWAN transmission: ~50mA for 100ms
+- LoRaWAN transmission: ~100mA for 400ms
 - Total energy per cycle: ~200mJ
 
 **Low Power Mode:**
@@ -517,7 +510,7 @@ How does LTO compare to alternatives at extreme cold?
 - Excellent cold capability: operates to -40°C
 - High energy density: 200-300 Wh/kg
 - **Non-rechargeable**: mission duration limited to initial capacity
-- For StratoSonde: 40mAh would support ~3-4 days maximum
+- For Stratosonde: 40mAh would support ~3-4 days maximum
 
 **The Verdict:** LTO is the best compromise for a solar-rechargeable stratospheric balloon. Yes, it degrades catastrophically below -50°C. But:
 - It can be charged at low temperature (critical for solar harvesting)
@@ -529,7 +522,7 @@ No battery chemistry truly "works" at -60°C—they all degrade severely. The qu
 
 ## Design Validation and Margins
 
-The characterization data validates the StratoSonde power architecture margins:
+The characterization data validates the Stratosonde power architecture margins:
 
 **Energy Balance (24-hour cycle at -60°C):**
 
@@ -540,14 +533,14 @@ The characterization data validates the StratoSonde power architecture margins:
 - Energy harvested: 35mW × 12hr = 420mWh = 1512 J
 
 **Nighttime (12 hours):**
-- Average system load: 15mW (MCU + sensors sleep mode)
-- Transmission load: 165mW × 0.1s × 144 transmissions/12hr = 2.4mWh = 8.5 J
-- Total nighttime consumption: 15mW × 12hr + 8.5 J = 180mWh + 8.5 J = 656 J
+- Average system load: 20mW (MCU + sensors sleep mode + GPS fixes)  
+- Transmission load: 330mW × 0.4s × 144 transmissions/12hr = 19.0 J
+- Total nighttime consumption: 20mW × 12hr + 19.0 J = 240mWh + 19.0 J = 883 J
 
 **Net Balance:**
-\[ E_{net} = 1512 J - 656 J = 856 J \text{ surplus} \]
+\[ E_{net} = 1512 J - 883 J = 629 J \text{ surplus} \]
 
-Even at -60°C with severely degraded battery performance, the system maintains positive energy balance. The 2S configuration with supercapacitor buffering ensures the battery's high internal resistance doesn't prevent charging during the day or discharging at night.
+Even at -60°C with severely degraded battery performance and the increased power requirements (longer GPS fix time, higher transmission power), the system maintains positive energy balance. The 2S configuration with supercapacitor buffering ensures the battery's high internal resistance doesn't prevent charging during the day or discharging at night.
 
 **Worst-Case Margin:**
 
@@ -566,7 +559,7 @@ The characterization quantifies individual cell performance, but system-level va
 **System Integration Testing (planned):**
 
 1. **Cold Chamber Full System Test**
-   - Complete StratoSonde electronics in thermal chamber
+   - Complete Stratosonde electronics in thermal chamber
    - Battery pack (2S HTC1015) + supercapacitor + buck converter
    - BQ25570 solar harvester with simulated solar input
    - LoRa radio transmitting realistic message packets
@@ -603,7 +596,7 @@ Below -50°C, the HTC1015 transitions from an energy storage device to an electr
 
 This isn't a manufacturing defect or a design flaw—it's physics. Lithium ions cannot hop between lattice sites when thermal energy is insufficient. Liquid electrolytes cannot conduct ions when they're transitioning to glass. Charge transfer reactions cannot proceed when activation barriers are insurmountable.
 
-The StratoSonde power architecture doesn't try to defeat physics—it works *with* the constraints:
+The Stratosonde power architecture doesn't try to defeat physics—it works *with* the constraints:
 
 - **2S configuration** provides voltage margin when individual cells sag under load
 - **Supercapacitor buffer** decouples high-current loads from high-resistance battery
