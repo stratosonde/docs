@@ -609,7 +609,6 @@ Sometimes the most valuable test result is the one that tells you your original 
 
 ---
 
-*Raw characterization data: [htc1015_temperature_test.xlsx]({{ site.baseurl }}/assets/data/htc1015_temperature_test.xlsx)*
+*Raw characterization data: [htc1015_temperature_test.csv]({{ site.baseurl }}/assets/data/htc1015_temperature_test.csv)*
 
-*HTC1015 Datasheet: [华慧规格书HTC1015-40(单电芯).pdf]({{ site.baseurl }}/assets/datasheets/HTC1015_datasheet.pdf)*
-
+*HTC1015 Datasheet: [华慧规格书HTC1015-40(单电芯).pdf](https://github.com/stratosonde/hardware/blob/main/datasheets/%E5%8D%8E%E6%85%A7%E8%A7%84%E6%A0%BC%E4%B9%A6HTC1015-40(%E5%8D%95%E7%94%B5%E8%8A%AF).pdf)*

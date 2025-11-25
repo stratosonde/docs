@@ -112,3 +112,7 @@ These values can be used directly in the [StratoSonde Power Budget Calculator](h
 ## Next Steps
 
 With the MPP characterized, the next step is to validate the full charging path under realistic load profiles and cold-temperature conditions, including -60 °C chamber tests. That will close the loop between lab characterization and actual flight performance.
+
+---
+
+*Raw characterization data: [solar_power_test_data.csv]({{ site.baseurl }}/assets/data/solar_power_test_data.csv)*

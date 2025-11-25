@@ -187,6 +187,16 @@ But at this temperature, the supercapacitor itself has 45Ω ESR and cannot deliv
 
 ### Layer 2→3: Supercapacitor to Ceramic Capacitor Bank
 
+**The buck converter advantage:**
+
+Before analyzing the ceramic bank, it's critical to understand how the buck converter fundamentally improves the system. The TI buck converter provides two key benefits:
+
+1. **Input current reduction**: For 50mA @ 3.3V output (165mW), the buck requires only 194mW input (at 85% efficiency). At 5V input, this is just 38.8mA—a 22% reduction in current draw from the ceramic bank.
+
+2. **Voltage droop tolerance**: The buck operates across a wide input range (5V down to ~2.5V minimum). This allows significant voltage droop before system failure. Even with 50Ω total ESR at extreme cold, the voltage droop is only 38.8mA × 50Ω = 1.94V, leaving final voltage at 3.06V—well above the 2.5V minimum.
+
+This is crucial: the buck converter doesn't just regulate voltage—it makes the ceramic bank viable by reducing current requirements and tolerating massive voltage sag.
+
 **The ceramic capacitor advantage:**
 
 Ceramic (Class I: C0G/NP0) capacitors maintain stable capacitance across temperature:
@@ -198,44 +208,41 @@ Ceramic (Class I: C0G/NP0) capacitors maintain stable capacitance across tempera
 
 Ceramic capacitors use a solid dielectric (barium titanate, titanium dioxide), not a liquid electrolyte. There's no ion mobility issue—the energy storage is pure electrostatic field in a solid material.
 
-**Trade-off:**
-
-Energy density is poor. A 100μF ceramic capacitor stores:
-$ E = \frac{1}{2}CV^2 = \frac{1}{2}(100 \times 10^{-6})(3.3)^2 = 0.544 mJ $
-
-That's barely enough for one radio transmission (which requires ~130mJ). Solution: a **bank** of ceramics in parallel.
-
 **Ceramic Bank Sizing:**
 
-To store 150mJ at 3.3V:
-$ C_{total} = \frac{2E}{V^2} = \frac{2 \times 0.150}{3.3^2} = 27.5 mF $
+At extreme cold, the goal is minimum viable transmission—any packet that might be received. The optimized degraded mode:
 
-Using 100μF capacitors: 275 capacitors in parallel.
+- **Transmission**: SF7, 60ms @ 50mA (output)
+- **Output energy**: 50mA × 3.3V × 0.060s = 9.9mJ
+- **Input energy** (with 85% buck efficiency): 9.9mJ / 0.85 = 11.6mJ
 
-Wait—that can't be right. Let's reconsider.
+The ceramic bank operates at the 2S LTO voltage (~5V when charged), not the 3.3V rail:
 
-**Actually: Minimum Viable Transmission**
+**Operating voltage range:**
+- Charged: 5V (from LTO/supercap)
+- Minimum: 2.5V (buck converter minimum input)
+- Usable voltage swing: 5V → 2.5V
 
-At extreme cold, the goal isn't full-power transmission—it's any transmission that might be received. LoRaWAN supports degraded modes:
+**Available energy per 220μF capacitor:**
+$ E = \frac{1}{2}C(V_{high}^2 - V_{low}^2) = \frac{1}{2}(220 \times 10^{-6})(5^2 - 2.5^2) = 2.06 mJ $
 
-- **Normal mode**: SF7 (spreading factor 7), 400ms transmission, ~130mJ
-- **High-sensitivity mode**: SF12, 2000ms transmission, ~650mJ (worse!)
-- **Minimum packet mode**: SF7, bare minimum packet (no payload), ~30mJ
+**Required capacitance:**
+$ C_{total} = \frac{2 \times E_{input}}{V_{high}^2 - V_{low}^2} = \frac{2 \times 0.0116}{25 - 6.25} = 1.24 mF $
 
-For a 30mJ transmission with 3.3V ceramic bank:
-$ C_{total} = \frac{2 \times 0.030}{3.3^2} = 5.5 mF $
+**Final design:**
+- **Capacitors**: 6× 220μF ceramic (C0G/NP0), 6.3V rated
+- **Total capacitance**: 1.32 mF
+- **Stored energy**: 12.4 mJ
+- **Margin**: 1.07× over requirement
+- **Mass**: ~6g (vs 27.5g in initial analysis)
 
-Using 100μF 6.3V ceramics: 55 capacitors in parallel.
-
-At 0.5g per capacitor (reasonable for 0805 package), total mass: 27.5g.
-
-**This is the trade-off**: to maintain any transmission capability below -60°C, we accept 27.5g of ceramic capacitors. For context:
+**This is the optimized trade-off**: Using 5V operation and reduced transmission requirements, the ceramic bank drops from 55 capacitors (27.5g) to just 6 capacitors (6g)—a 78% reduction. The revised mass budget:
 - LTO cells: 2.4g × 2 = 4.8g
 - Supercapacitor: ~3g
-- Ceramic bank: 27.5g
-- **Total energy storage mass**: 35.3g
+- Ceramic bank: 6g
+- **Total energy storage mass**: 13.8g
 
-For a balloon payload where the entire electronics might be 150g, 35.3g for power is significant but acceptable—especially since it's the difference between complete radio silence and periodic position updates.
+For a balloon payload where the entire electronics might be 150g, 13.8g for power is extremely reasonable—enabling emergency transmissions at -60°C while maintaining acceptable mass fraction.
 
 ## Operational Strategy: Mode Switching Logic
 
@@ -299,16 +306,17 @@ Solar → BQ25570 → 2S LTO → Supercap → Ceramic Bank → Buck Converter �
 
 **Transmission Power Budget:**
 
-A minimal LoRaWAN packet at SF7:
-- Preamble: 8 symbols × 5.5ms = 44ms @ 100mA
-- Header: 4 symbols × 2.75ms = 11ms @ 100mA  
-- Payload (8 bytes): ~16ms @ 100mA
-- **Total**: ~70ms @ 100mA = 7mA·s = 23.1mJ @ 3.3V
+A minimal LoRaWAN packet at SF7 with reduced power:
+- **Output**: 50mA @ 3.3V for 60ms = 9.9mJ
+- **Buck input** (85% efficiency): 9.9mJ / 0.85 = 11.6mJ
+- **Buck input current**: 11.6mJ / (60ms × 5V) = 38.8mA
 
-The ceramic bank (5.5mF @ 3.3V) stores:
-$ E = \frac{1}{2}CV^2 = \frac{1}{2}(0.0055)(3.3)^2 = 30mJ $
+The ceramic bank (6× 220μF = 1.32mF @ 5V) stores:
+$ E = \frac{1}{2}C(V_{high}^2 - V_{low}^2) = \frac{1}{2}(0.00132)(5^2 - 2.5^2) = 12.4 mJ $
 
-**Margin**: 30mJ / 23.1mJ = 1.3× (acceptable for minimum viable operation)
+**Margin**: 12.4mJ / 11.6mJ = 1.07× (acceptable for minimum viable operation)
+
+The reduced transmission power (50mA vs 100mA) slightly decreases range but is compensated by line-of-sight communication from altitude. More importantly, it enables a 78% reduction in ceramic capacitor mass—from 27.5g to just 6g.
 
 ### Mode 4: Data Logging Only (Extreme Survival)
 
@@ -545,7 +553,7 @@ To illustrate the advantage of the cascade strategy, consider conventional archi
 
 The cascade architecture trades complexity for resilience. Each additional layer adds:
 - More components (failure points)
-- More mass (~30g additional)
+- More mass (~10g additional beyond basic battery)
 - More firmware logic (mode switching)
 
 But gains:
@@ -608,13 +616,19 @@ Use 0.22F capacitor (1.2× margin)
 
 ### Ceramic Capacitor Bank
 
-Required capacitance for minimal transmission at V_min:
-$ C_{ceramic} = \frac{2 \times E_{tx,min}}{V_{min}^2} $
+Required capacitance for minimal transmission with buck converter:
+$ C_{ceramic} = \frac{2 \times E_{output} / \eta_{buck}}{V_{max}^2 - V_{min}^2} $
 
-For Stratosonde (30mJ minimal packet, 3.3V minimum):
-$ C_{ceramic} = \frac{2 \times 0.030}{(3.3)^2} = 5.5 mF $
+Where:
+- E_output: radio output energy requirement (J)
+- η_buck: buck converter efficiency (~0.85)
+- V_max: charged voltage from LTO/supercap (5V)
+- V_min: buck minimum input voltage (2.5V)
 
-Use 55× 100μF capacitors in parallel
+For Stratosonde (9.9mJ output @ 50mA, 60ms SF7 packet):
+$ C_{ceramic} = \frac{2 \times 0.0099 / 0.85}{5^2 - 2.5^2} = \frac{0.0233}{18.75} = 1.24 mF $
+
+Use 6× 220μF ceramic capacitors (1.32mF total, 1.07× margin)
 
 ## Conclusion: Cascading Power as a Design Philosophy
 
@@ -630,7 +644,7 @@ This isn't about redundancy—having two batteries in case one fails. It's about
 
 3. **Graceful degradation is achievable**: Instead of hard failure at -40°C (battery-only) or -60°C (supercap-only), the system degrades through defined modes: normal → buffered → minimal → logging-only.
 
-4. **Mass penalty is acceptable**: The full cascade (LTO + supercap + ceramic bank + solar) totals ~40g for the complete power system. For a stratospheric balloon where this enables continuous multi-day operation, the trade is justified.
+4. **Mass penalty is acceptable**: The full cascade (LTO + supercap + ceramic bank + solar) totals ~15g for the complete power system (13.8g energy storage + ~1-2g solar cells). For a stratospheric balloon where this enables continuous multi-day operation across extreme temperatures, the trade is justified.
 
 **What remains unknowable without flight test:**
 
@@ -653,4 +667,4 @@ The physics of electrochemistry at -60°C is unforgiving. But with enough engine
 
 *Test data: [lto_supercap_test_data.csv]({{ site.baseurl }}/assets/data/lto_supercap_test_data.csv)*
 
-*Related: [HTC1015 LTO Temperature Characterization]({{ site.baseurl }}/2025/11/23/htc1015-lto-temperature-characterization.html)*
+*Related: [HTC1015 LTO Temperature Characterization]({% post_url 2025-11-23-htc1015-lto-temperature-characterization %})*
