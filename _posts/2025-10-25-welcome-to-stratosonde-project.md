@@ -66,7 +66,7 @@ This work stands on decades of innovation by amateur radio operators and the pic
 
 **Follow Development**
 - Subscribe to this blog for technical updates
-- Join our [Discord](https://discord.gg/CdqQqW7n) for real-time discussion
+- Join our [Discord](https://discord.gg/AfTHuy9v24) for real-time discussion
 - Watch repositories on [GitHub](https://github.com/stratosonde)
 
 **Contribute**

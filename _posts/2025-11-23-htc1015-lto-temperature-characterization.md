@@ -108,8 +108,8 @@ At room temperature and moderately cold conditions, the HTC1015 performs as expe
 
 | Temperature | I_high | V_high | I_low | V_low | R_int |
 |------------|--------|--------|-------|-------|-------|
-| +25°C | 20 mA | 2.56 V | 100 mA | 2.50 V | **0.75 mΩ** |
-| 0°C | 20 mA | 2.56 V | 100 mA | 2.47 V | **1.13 mΩ** |
+| +25°C | 20 mA | 2.56 V | 100 mA | 2.50 V | **0.75 Ω** |
+| 0°C | 20 mA | 2.56 V | 100 mA | 2.47 V | **1.13 Ω** |
 
 The resistance increases by 50% from +25°C to 0°C—a modest degradation that's well within acceptable limits. At 100mA discharge current, the voltage sag is only 60mV at freezing temperatures.
 
@@ -121,10 +121,10 @@ As temperature drops into the range of terrestrial winter conditions and lower s
 
 | Temperature | I_high | V_high | I_low | V_low | R_int |
 |------------|--------|--------|-------|-------|-------|
-| -10°C | 20 mA | 2.54 V | 100 mA | 2.42 V | **1.50 mΩ** |
-| -20°C | 20 mA | 2.51 V | 100 mA | 2.33 V | **2.25 mΩ** |
-| -30°C | 20 mA | 2.39 V | 100 mA | 2.12 V | **3.38 mΩ** |
-| -40°C | 20 mA | 2.04 V | 100 mA | 1.25 V | **9.88 mΩ** |
+| -10°C | 20 mA | 2.54 V | 100 mA | 2.42 V | **1.5 Ω** |
+| -20°C | 20 mA | 2.51 V | 100 mA | 2.33 V | **2.25 Ω** |
+| -30°C | 20 mA | 2.39 V | 100 mA | 2.12 V | **3.38 Ω** |
+| -40°C | 20 mA | 2.04 V | 100 mA | 1.25 V | **9.88 Ω** |
 
 At -40°C, internal resistance has increased by **13× compared to room temperature**. The 100mA load now causes 790mV of voltage sag, pulling the cell down to 1.25V—perilously close to the 1.6V discharge cutoff.
 
@@ -136,9 +136,9 @@ Below -50°C, battery performance doesn't just degrade—it collapses:
 
 | Temperature | I_high | V_high | I_low | V_low | R_int | Notes |
 |------------|--------|--------|-------|-------|-------|-------|
-| -50°C | 1 mA | 2.33 V | 2 mA | 1.74 V | **590 mΩ** | Test current reduced 50× |
-| -55°C | 0.1 mA | 2.22 V | 0.5 mA | 1.55 V | **1675 mΩ** | Test current reduced 500× |
-| -60°C | 0.1 mA | 1.50 V | 0.2 mA | 0.70 V | **8000 mΩ** | Test current reduced 1000× |
+| -50°C | 1 mA | 2.33 V | 2 mA | 1.74 V | **590 Ω** | Test current reduced 50× |
+| -55°C | 0.1 mA | 2.22 V | 0.5 mA | 1.55 V | **1675 Ω** | Test current reduced 500× |
+| -60°C | 0.1 mA | 1.50 V | 0.2 mA | 0.70 V | **8000 Ω** | Test current reduced 1000× |
 
 At -60°C, internal resistance has increased by **10,667× compared to room temperature**. The cell can barely deliver 0.1-0.2mA without voltage collapse.
 
@@ -211,7 +211,7 @@ The supercapacitor serves as a low-ESR energy reservoir that decouples high-curr
 
 **Supercapacitor Specifications:**
 - Rated voltage: 5.5V
-- Capacitance: 0.22F (220,000 μF) estimated
+- Capacitance: 1.5F
 - ESR: <100 mΩ (1/80th the battery resistance at -60°C)
 
 **How It Works:**
@@ -226,7 +226,7 @@ $ I_{trickle} = \frac{2.0V - 1.8V}{16Ω} = 12.5 mA $
 This 12.5mA trickle current slowly accumulates energy in the supercapacitor over the 5-minute inter-transmission interval:
 
 $ Q = I \times t = 0.0125A \times 300s = 3.75 C $
-$ E = \frac{1}{2}CV^2 = \frac{1}{2}(0.22F)(1.8V)^2 = 0.356 J $
+$ E = \frac{1}{2}CV^2 = \frac{1}{2}(1.5F)(1.8V)^2 = 2.43 J $
 
 During transmission, the supercapacitor delivers the required current burst:
 
@@ -236,9 +236,9 @@ $ E_{transmission} = P \times t = (3.3V \times 0.1A) \times 0.4s = 0.132 J $
 The supercapacitor can support **20+ transmissions** from stored energy alone, even if the battery is completely unable to deliver current during the burst.
 
 **Voltage Sag During Transmission:**
-$ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.1A \times 0.4s}{0.22F} = 0.182V $
+$ \Delta V = \frac{Q}{C} = \frac{I \times t}{C} = \frac{0.1A \times 0.4s}{1.5F} = 0.027V $
 
-Only 182mV voltage drop during transmission—still manageable and far better than the multi-volt sag the battery would experience.
+Only 27mV voltage drop during transmission—excellent, and far better than the multi-volt sag the battery would experience. The 1.5F supercapacitor provides substantial energy buffering.
 
 ### Layer 3: Buck Converter to 3.3V
 
@@ -327,17 +327,17 @@ Notice: the datasheet stops at -10°C. Below this, we're in uncharted territory.
 
 Our data extends this curve:
 
-| Temperature | % Capacity (estimated) | Internal Resistance (mΩ) |
-|------------|----------------------|--------------------------|
-| +25°C | 100% | 0.75 |
-| 0°C | 80% | 1.13 |
-| -10°C | 60% | 1.50 |
-| -20°C | ~45% | 2.25 |
-| -30°C | ~30% | 3.38 |
-| -40°C | ~20% | 9.88 |
-| -50°C | ~10% | 590 |
-| -55°C | ~5% | 1675 |
-| -60°C | ~2% | 8000 |
+| Temperature | % Capacity (estimated) | Internal Resistance |
+|------------|----------------------|---------------------|
+| +25°C | 100% | 0.75 Ω |
+| 0°C | 80% | 1.13 Ω |
+| -10°C | 60% | 1.5 Ω |
+| -20°C | ~45% | 2.25 Ω |
+| -30°C | ~30% | 3.38 Ω |
+| -40°C | ~20% | 9.88 Ω |
+| -50°C | ~10% | 590 Ω |
+| -55°C | ~5% | 1675 Ω |
+| -60°C | ~2% | 8000 Ω |
 
 Below -50°C, "capacity" becomes a misleading metric—the issue isn't stored energy, it's the inability to extract that energy at useful rates.
 
@@ -606,6 +606,17 @@ The Stratosonde power architecture doesn't try to defeat physics—it works *wit
 The characterization transforms an unknown ("will batteries work at -60°C?") into quantified design parameters ("batteries degrade catastrophically, but the architecture compensates"). This data now feeds directly into power budget calculations, mission duration modeling, and thermal management strategy.
 
 Sometimes the most valuable test result is the one that tells you your original plan won't work—forcing you to engineer a better solution. The HTC1015 temperature characterization did exactly that.
+
+---
+
+## Related Posts
+
+This post is part of the Stratosonde power system characterization series:
+
+- [BQ25570 Bench Characterization]({% post_url 2025-11-23-bq25570-bench-characterization %}) - Solar energy harvester efficiency testing
+- [Stratosonde Cascading Power Architecture]({% post_url 2025-11-24-stratosonde-cascading-power-architecture %}) - The multi-layer power strategy
+- [Ceramic Capacitor Bank Validation]({% post_url 2025-11-25-ceramic-capacitor-bank-extreme-cold-validation %}) - The final power layer at -70°C
+- [Optimizing Solar Power]({% post_url 2025-11-22-optimizing-solar-power %}) - Solar cell characterization and MPPT tuning
 
 ---
 

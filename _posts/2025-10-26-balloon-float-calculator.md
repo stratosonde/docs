@@ -16,7 +16,7 @@ I'm excited to announce the launch of our new interactive Balloon Float Calculat
 The calculator has been significantly enhanced with several major improvements:
 
 - **Physics validation** - All calculations now validated against the [Stratosonde Python Predictor](https://predictor.stratosonde.org) for accuracy
-- **Mylar balloon focus** - Updated for spherical mylar superpressure balloons with proper burst pressure specifications (8-15 kPa typical, 15-25 kPa heavy-duty aerospace)
+- **Mylar balloon focus** - Updated for spherical mylar superpressure balloons with proper burst pressure specifications (~4.8 kPa / 0.7 psi typical burst)
 - **Enhanced pressure visualization** - Pressure chart now displays altitude on y-axis for more intuitive atmospheric profile (like standard meteorological soundings)
 - **Clearer physics explanations** - New intuition boxes explain the critical distinction between net force (goes to zero at float) vs pressure differential (maximum at float)
 - **Three interactive charts** - Added volume/ascent rate and force analysis visualizations alongside the pressure chart
@@ -47,12 +47,12 @@ The calculator takes your design decisions and predicts your flight performance.
 **Balloon Volume** (e.g., 0.5 m³)
 - Physical capacity of your balloon when fully inflated
 - Larger volume = higher float altitude, but heavier and more expensive
-- Typical party balloons: 36" Qualatex = 0.5 m³
+- Typical mylar party balloons: ~0.5 m³
 
-**Balloon Weight** (e.g., 105 grams)
-- Mass of the latex envelope itself
+**Balloon Weight** (e.g., 20-40 grams)
+- Mass of the mylar envelope itself
 - Heavier balloon needs more lift and reduces maximum altitude
-- Typical 36" Qualatex weighs ~105g
+- Mylar superpressure balloons are typically lighter than latex
 
 **Payload Weight** (e.g., 10 grams)
 - Total mass of electronics, sensors, battery, antenna
@@ -93,10 +93,10 @@ The calculator takes your design decisions and predicts your flight performance.
 - Where your balloon will spend most of its flight
 - Determines radio line-of-sight and available power (solar angle)
 
-**Differential Pressure** (e.g., 3.2 kPa or 0.46 psi)
+**Differential Pressure** (e.g., 2.8 kPa or 0.4 psi)
 - Stress on balloon envelope at float altitude
 - Critical safety parameter—too high risks burst
-- Qualatex 36" bursts at ~4.7-5.4 kPa
+- Mylar superpressure balloons typically burst at ~4.8 kPa (0.7 psi)
 - Must stay well below burst threshold for safety margin
 
 ### The Core Trade-offs
@@ -107,7 +107,7 @@ The picoballoon design challenge involves balancing several competing factors:
 
 **Balloon Size:** Larger balloon = higher float altitude BUT heavier envelope and higher cost. A bigger balloon provides more buoyancy but adds its own weight penalty.
 
-**Differential Pressure:** Must stay well below burst limit (typically 4.7 kPa for Qualatex 36"). Higher float altitudes generally mean higher differential pressures, so you're balancing altitude goals against envelope stress limits.
+**Differential Pressure:** Must stay well below burst limit (typically ~4.8 kPa / 0.7 psi for mylar superpressure balloons). Higher float altitudes generally mean higher differential pressures, so you're balancing altitude goals against envelope stress limits.
 
 **Free Lift:** Needs to be sufficient to overcome thermals and ensure steady ascent, but excess free lift wastes gas and can reduce float altitude.
 
@@ -134,14 +134,15 @@ Rather than just showing final numbers, the calculator walks through each stage:
 
 The calculator provides clear safety guidance for mylar superpressure balloons:
 
-- ✅ **Safe** (< 6 kPa) - Conservative safety margin for typical mylar balloons
-- ⚠️ **Caution** (6-8 kPa) - Approaching burst limit, careful monitoring needed
-- 🛑 **Danger** (≥ 8 kPa) - At or above typical burst limit, redesign required
+- ✅ **Safe** (< 2.8 kPa / 0.4 psi) - Conservative safety margin, center of safe operating range
+- ⚠️ **Caution** (2.8-3.5 kPa / 0.4-0.5 psi) - Approaching limits, risky territory
+- ⚠️ **Unsafe** (3.5-4.1 kPa / 0.5-0.6 psi) - High stress on envelope, redesign recommended
+- 🛑 **Danger** (≥ 4.1 kPa / 0.6 psi) - Burst imminent, typically fails around 4.8 kPa (0.7 psi)
 
 **Mylar Balloon Specifications:**
-- **Typical mylar superpressure balloons:** 8-15 kPa burst pressure (polyester film with metallic coating)
-- **Heavy-duty aerospace mylar:** 15-25 kPa burst pressure (multi-layer construction)
+- **Typical mylar superpressure balloons:** Burst around 4.8 kPa (0.7 psi)
 - Sealing quality is critical - always test pressurize on ground before flight to check seam integrity
+- Design for <2.8 kPa (0.4 psi) differential pressure to maintain adequate safety margin
 
 ## Physics Validation & Heritage
 

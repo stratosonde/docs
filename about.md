@@ -19,11 +19,13 @@ We're taking a methodical, validation-first approach:
 
 ## Technology Stack
 
-**Hardware:** STM32WLE5 MCU with integrated LoRa radio, solar energy harvesting (BQ25570), LTO batteries, environmental sensors (SHT31, MS5607), GNSS positioning
+**Hardware:** STM32WLE5 MCU with integrated LoRa radio, solar energy harvesting (BQ25570), 2S LTO batteries + 1.5F supercapacitor, environmental sensors (SHT31, MS5607), ATGM336H GPS
 
 **Firmware:** Real-time power management, H3Lite geospatial indexing for autonomous LoRaWAN region detection, adaptive transmission scheduling, flash-based data logging
 
-**Target Specs:** <15g total weight, -50°C to +60°C operation, multi-day mission duration, 12-18km float altitude
+**Target Specs:** <15g total weight, -65°C to +60°C validated operation, multi-day mission duration, 12-18km float altitude
+
+For detailed specifications, see the [Technical Specifications](/specifications/) page.
 
 ## Community Foundation
 
@@ -37,7 +39,7 @@ Stratosonde builds on decades of work by the amateur radio and picoballoon commu
 ## Get Involved
 
 **Join the Discussion**  
-- **Discord**: [discord.gg/CdqQqW7n](https://discord.gg/CdqQqW7n)
+- **Discord**: [discord.gg/AfTHuy9v24](https://discord.gg/AfTHuy9v24)
 - **GitHub**: [@stratosonde](https://github.com/stratosonde)
 - **Email**: info@stratosonde.org
 
