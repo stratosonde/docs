@@ -16,7 +16,7 @@ This page consolidates validated specifications from component characterization 
 
 | Parameter | Specification | Source |
 |-----------|---------------|--------|
-| **Total Weight** | <15g target (15.6g prototype) | [Hardware Validation]({% post_url 2025-11-02-hardware-initial-validation %}) |
+| **Total Weight** | <15g target (15.6g prototype) | [Hardware Validation]({% post_url 2025-11-02-first-hardware-arrives %}) |
 | **Target Altitude** | 12-18 km (40,000-60,000 ft) | Design target |
 | **Mission Duration** | Multi-day validation → weeks goal | Design target |
 | **Operating Temperature** | -65°C to +60°C (validated) | [Ceramic Cap Testing]({% post_url 2025-11-25-ceramic-capacitor-bank-extreme-cold-validation %}) |
@@ -85,7 +85,7 @@ This page consolidates validated specifications from component characterization 
 |-----------|---------------|--------|
 | **Frequency** | 868 MHz (EU) / 915 MHz (US) | Design |
 | **Max TX Power** | +22 dBm | Datasheet |
-| **TX Current** | ~100mA at +22 dBm | [Power Calculator]({% post_url 2025-10-27-power-budget-calculator %}) |
+| **TX Current** | ~100mA at +22 dBm | [Power Calculator]({% post_url 2025-10-27-stratosonde-power-calculator %}) |
 | **Spreading Factor** | SF7-SF12 (adaptive) | Design |
 | **Protocol** | LoRaWAN Class A | Design |
 
@@ -93,8 +93,8 @@ This page consolidates validated specifications from component characterization 
 
 | Parameter | Specification | Source |
 |-----------|---------------|--------|
-| **Resolution** | R3 (~11,000 entries) | [H3Lite Blog]({% post_url 2025-11-03-h3lite-for-lorawan-regions %}) |
-| **Flash Size** | ~44KB | [H3Lite Blog]({% post_url 2025-11-03-h3lite-for-lorawan-regions %}) |
+| **Resolution** | R3 (~11,000 entries) | [H3Lite Blog]({% post_url 2025-10-29-h3lite-lorawan-region-detection %}) |
+| **Flash Size** | ~44KB | [H3Lite Blog]({% post_url 2025-10-29-h3lite-lorawan-region-detection %}) |
 | **Regions Supported** | 16 LoRaWAN frequency plans | Design |
 
 ---
