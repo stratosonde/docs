@@ -67,7 +67,7 @@ To validate the degraded mode architecture, the second power layer (supercapacit
 
 **Supercapacitor:**
 - Type: 5.5V rated electrochemical double-layer capacitor (EDLC)
-- Capacitance: 0.22F (220,000 μF)
+- Capacitance: 1.5F (1,500,000 μF)
 - ESR: <100 mΩ at room temperature (manufacturer spec)
 - Initial charge: 5.5V from 2S LTO cells at room temperature
 
@@ -609,10 +609,10 @@ Where:
 - M: number of transmissions
 - V_max, V_min: voltage range
 
-For Stratosonde (130mJ per tx, 10 transmissions, 5.5V max, 4.0V min):
-$ C_{super} = \frac{2 \times 0.13J \times 10}{(5.5)^2 - (4.0)^2} = \frac{2.6}{30.25 - 16} = 0.182F $
+For Stratosonde (130mJ per tx, 50 transmissions, 5.5V max, 4.0V min):
+$ C_{super} = \frac{2 \times 0.13J \times 50}{(5.5)^2 - (4.0)^2} = \frac{13}{30.25 - 16} = 0.91F $
 
-Use 0.22F capacitor (1.2× margin)
+Use 1.5F capacitor (1.6× margin)
 
 ### Ceramic Capacitor Bank
 
