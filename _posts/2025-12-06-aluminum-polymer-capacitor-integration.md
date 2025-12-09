@@ -289,6 +289,175 @@ The aluminum polymer addition costs 1g and ~$0.50. It extends the operating enve
 
 ---
 
+## Addendum: Leakage Current Investigation — Why the Aluminum Polymer Capacitor Was Removed from the Design
+
+After completing the initial characterization above, an anomaly in the test data prompted further investigation. The conclusion: **the aluminum polymer capacitor introduces unacceptable parasitic losses and has been removed from the Stratosonde design.** This section documents the failure analysis and lessons learned.
+
+### The Anomaly: Lower OCV During Testing
+
+During the aluminum polymer characterization, the LTO cell open-circuit voltage (OCV) was consistently lower than observed in previous test runs at comparable temperatures. At first, this was dismissed as normal variation—but the magnitude of the discrepancy warranted investigation.
+
+**Cross-Test OCV Comparison (2S LTO Configuration):**
+
+| Temperature | Ceramic Bank Test | LTO+Supercap Test | Aluminum Polymer Test | Discrepancy |
+|-------------|-------------------|-------------------|----------------------|-------------|
+| -50°C | — | 5.09V | 4.78V | **−6%** |
+| -55°C | 5.07V | 5.05V | ~4.48V | **−11%** |
+| -58°C | — | — | 3.87V | — |
+| -60°C | 4.70V | 4.90V | 3.60V | **−23% to −26%** |
+| -65°C | 3.33V | — | 1.25V | **−62%** |
+
+The aluminum polymer test showed substantially lower OCV at every overlapping temperature point. At -60°C, the discrepancy exceeds 1V—a significant fraction of the total battery voltage.
+
+![OCV Comparison Across Tests]({{ site.baseurl }}/assets/images/posts/2025-12-06-aluminum-polymer-capacitor-integration/ocv_comparison_across_tests.png)
+
+The plot above makes the discrepancy visually unmistakable: while the ceramic bank test and LTO+supercap test show nearly identical OCV curves (both starting ~5.1V and following similar degradation), the aluminum polymer test curve is shifted dramatically lower—especially at the extreme cold temperatures where we need every millivolt.
+
+### Root Cause: Aluminum Polymer Leakage Current
+
+The Kyocera RPF1014332M006K datasheet specifies a maximum leakage current of **4.4mA at rated voltage (6.3V) and room temperature.** This specification was noted during component selection but underestimated in its impact.
+
+To quantify the actual leakage behavior, a dedicated characterization was performed across temperature and voltage:
+
+**Measured Leakage Current (mA) vs Temperature and Voltage:**
+
+| Temp (°C) | 2.5V | 3.0V | 3.5V | 4.0V | 4.5V | 5.0V | 5.5V |
+|-----------|------|------|------|------|------|------|------|
+| +20 | — | — | — | — | — | — | **7.54** |
+| +10 | 0.23 | 0.36 | 0.54 | 0.78 | 1.14 | 1.87 | 5.36 |
+| 0 | 0.21 | 0.33 | 0.50 | 0.74 | 1.14 | 1.65 | 3.86 |
+| −20 | 0.19 | 0.29 | 0.44 | 0.65 | 0.95 | 1.40 | 2.50 |
+| −40 | 0.17 | 0.27 | 0.40 | 0.58 | 0.85 | 1.24 | 1.98 |
+| −50 | 0.16 | 0.25 | 0.38 | 0.57 | 0.80 | 1.17 | 1.79 |
+| −60 | 0.16 | 0.25 | 0.37 | 0.54 | 0.78 | 1.13 | 1.70 |
+| −70 | 0.12 | 0.19 | 0.28 | 0.40 | 0.57 | 0.30 | 1.13 |
+
+**Key Observations:**
+
+1. **Room temperature leakage exceeds datasheet maximum**: At 5.5V and +20°C, measured leakage was 7.54mA—72% above the 4.4mA maximum specification. The datasheet specification applies at 6.3V; extrapolating to 5.5V should yield *lower* leakage.
+
+2. **Leakage is strongly voltage-dependent**: At −60°C, leakage drops from 1.70mA (at 5.5V) to 0.54mA (at 4.0V)—a 3× reduction. This exponential voltage dependence is characteristic of aluminum electrolytic leakage mechanisms.
+
+3. **Temperature reduces leakage significantly**: From +20°C to −60°C at 5.5V, leakage drops from 7.54mA to 1.70mA—a 4.4× improvement. Cold temperatures slow the electrochemical processes responsible for leakage.
+
+4. **Even cold leakage is substantial**: At typical 2S LTO operating voltage (~4.5V) and stratospheric temperature (−60°C), leakage is still **0.78mA continuous**.
+
+### Impact Analysis: The Double Penalty
+
+The aluminum polymer capacitor imposes a double penalty on the power system:
+
+**Penalty 1: Warm-Weather Battery Drain**
+
+During the aluminum polymer test, the 2-hour thermal soak at each temperature allowed continuous leakage current:
+
+At +20°C to −40°C (warm regime where supercap is functional):
+- Average leakage: ~2-5mA
+- Drain per 2-hour soak: 4-10mAh
+- Cumulative drain across warm soak points: **~20-30mAh**
+
+For a 40mAh LTO cell pack, this represents **50-75% of total capacity** lost to leakage before reaching the extreme cold temperatures where the aluminum polymer was supposed to provide benefit.
+
+**Penalty 2: Depleted Battery When Most Needed**
+
+The lower OCV observed at extreme cold (−58°C to −65°C) directly results from the warm-weather drain:
+
+| Test | OCV at −60°C | Probable Cause |
+|------|--------------|----------------|
+| Ceramic bank test | 4.70V | Fresh battery, no aluminum cap leakage |
+| LTO+Supercap test | 4.90V | Fresh battery, no aluminum cap leakage |
+| Aluminum polymer test | 3.60V | **Battery depleted by 30+ mAh of warm leakage** |
+
+The 1.1-1.3V lower OCV at −60°C directly translates to reduced transmission capability—exactly when the aluminum polymer was supposed to bridge the gap between supercap failure and ceramic operation.
+
+### The Datasheet Warning We Ignored
+
+The 4.4mA maximum leakage specification was visible from the start. For a 40mAh battery pack, this represents:
+
+$ t_{drain} = \frac{Q_{battery}}{I_{leakage}} = \frac{40mAh}{4.4mA} = 9.1 \text{ hours} $
+
+**A fully charged battery would be completely drained in under 10 hours** from aluminum polymer leakage alone—even with no other loads.
+
+The error was assuming that cold temperatures would eliminate the leakage concern. While cold *reduces* leakage (to ~0.8-1.7mA at stratospheric temperatures), the damage occurs during the warm phase:
+
+- Ground handling at room temperature
+- Initial ascent through temperate troposphere
+- Thermal chamber soak periods during testing
+
+By the time the balloon reaches extreme cold altitudes where the aluminum polymer's low ESR matters, the battery has already been significantly depleted.
+
+### Why Not Just Disconnect the Aluminum Cap When Warm?
+
+A theoretical mitigation would be to use a MOSFET switch to disconnect the aluminum polymer capacitor during warm operation and only engage it below −50°C when the supercap fails.
+
+**Problems with this approach:**
+
+1. **Added complexity**: Switch, gate driver, temperature-based control logic
+2. **Switch resistance**: Even a good MOSFET adds 10-50mΩ in the critical power path
+3. **Failure modes**: Switch stuck open → no cold operation; stuck closed → original problem
+4. **Mass penalty**: ~0.5g for switch components, negating the 1g aluminum polymer
+
+The complexity isn't justified when a simpler solution exists.
+
+### The Alternative: Larger Ceramic Capacitor Bank
+
+The ceramic capacitor bank tested previously demonstrated excellent performance to −70°C with zero leakage current. The limitation was sizing—the original 408µF bank was deliberately undersized to expose the supercap-to-ceramic transition.
+
+**Revised ceramic-only architecture:**
+
+| Parameter | Original Design | Revised Design |
+|-----------|-----------------|----------------|
+| Ceramic bank size | 1.32mF (6× 220µF) | **2.2mF (10× 220µF)** |
+| Mass | 6g | 10g |
+| Leakage current | 0 | 0 |
+| ESR at −60°C | <50mΩ | <50mΩ |
+| Cost | ~$3 | ~$5 |
+| Operating range | −55°C to −65°C | −55°C to −65°C |
+
+The 4g mass penalty (10g vs 6g) is offset by removing the 1g aluminum polymer capacitor, yielding a net increase of only 3g.
+
+**Critically**: Zero leakage means the battery arrives at extreme cold temperatures at full state-of-charge, maximizing the available energy for transmission.
+
+### Lessons Learned
+
+1. **Leakage specifications matter for small batteries**: A "mere" 4.4mA leakage is catastrophic for a 40mAh battery pack. Always calculate drain time: $t = Q/I$.
+
+2. **Warm-weather parasitic losses compound**: Components that operate during warm portions of the mission profile drain energy that's desperately needed later.
+
+3. **Cold-temperature benefits don't erase warm-temperature costs**: The aluminum polymer's improved cold performance was irrelevant because the battery was already depleted.
+
+4. **Solid dielectrics > liquid/polymer electrolytes for extreme environments**: Ceramic capacitors have zero leakage because they use solid ceramic dielectric. No liquid = no leakage paths.
+
+5. **The datasheet tried to warn us**: The 4.4mA maximum leakage was right there. Component selection should have included a power budget analysis showing this was incompatible with the battery capacity.
+
+### Revised Conclusion: Component Rejected
+
+The aluminum polymer capacitor Kyocera RPF1014332M006K **is not suitable** for the Stratosonde cascading power architecture. While its cold-temperature ESR performance is adequate, the continuous leakage current creates an unacceptable energy loss that defeats its intended purpose.
+
+**Revised Final Configuration:**
+- **2× HTC1015 LTO cells** (2S, 4.8V nominal, 80mAh total)
+- **1× 1.5F supercapacitor** (5.5V, ~3g)
+- ~~**1× 3300µF aluminum polymer** (6.3V, ~1g)~~ **REMOVED**
+- **10× 220µF ceramics** (2.2mF bank, 6.3V, ~10g)
+
+The ceramic bank absorbs the aluminum polymer's intended role with no parasitic losses, proven extreme-cold performance, and only 3g additional mass.
+
+**Firmware Adaptive Transmission (revised):**
+
+```
+if (temperature > -50°C):
+    mode = FULL_POWER          # SF10-SF12, any duration
+elif (temperature > -55°C):
+    mode = SUPERCAP_BUFFERED   # SF7-SF10, up to 200ms
+elif (temperature > -65°C):
+    mode = CERAMIC_ONLY        # SF7 only, 60ms max
+else:
+    mode = DATA_LOGGING        # No transmission, log to flash
+```
+
+This experience reinforces a fundamental principle of space-constrained, energy-limited system design: **every milliamp counts, especially the ones you can't see.**
+
+---
+
 ## Related Posts
 
 This post is part of the Stratosonde power system characterization series:
@@ -303,3 +472,5 @@ This post is part of the Stratosonde power system characterization series:
 *Test configuration: 2× HTC1015 LTO cells in series, 1.5F supercapacitor (5.5V), 3300µF aluminum polymer capacitor, all in parallel. Load profiles: 50mA × 60ms and 25mA × 2000ms.*
 
 *Raw characterization data: [aluminum_polymer_capacitor_test.csv]({{ site.baseurl }}/assets/data/aluminum_polymer_capacitor_test.csv)*
+
+*Leakage current characterization data: [aluminum_polymer_leakage_test.csv]({{ site.baseurl }}/assets/data/aluminum_polymer_leakage_test.csv)*
