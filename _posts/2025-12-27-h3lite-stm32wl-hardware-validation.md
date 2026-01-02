@@ -91,30 +91,7 @@ Some locations in the deep ocean don't find any region even after 6 rings (~390k
 
 **Behavior:** When no region is found, the device enters a fallback mode, waiting for GPS updates as it drifts closer to land.
 
-## Edge Cases and Data Quality Issues
-
-The profiling revealed some interesting edge cases in the underlying hplans GeoJSON data:
-
-### Caribbean Region Anomalies
-
-| Location | Expected | Actual | Issue |
-|:---------|:---------|:-------|:------|
-| Havana, Cuba | US915 | AS923-3 | hplans data assigns Cuba to AS923-3 |
-| Kingston, Jamaica | US915 | AU915 | hplans data assigns Jamaica to AU915 |
-| Curacao (Dutch) | EU868/US915 | AS923-1 | Dutch Caribbean assigned to AS923-1 |
-
-These aren't H3Lite bugs—they reflect the actual region assignments in the DEWI Alliance hplans repository. Some Caribbean islands have complex regulatory situations that may need verification.
-
-### French Overseas Territories
-
-| Location | Coordinates | Result | Notes |
-|:---------|:------------|:-------|:------|
-| Martinique | 14.64°N, 61.02°W | EU868 | Correct - French territory |
-| Guadeloupe | 16.27°N, 61.55°W | EU868 | Correct - French territory |
-
-French Caribbean territories correctly return EU868, following French radio regulations.
-
-### Multi-Region Results
+## Multi-Region Offshore Locations
 
 Some offshore locations find multiple equidistant regions:
 
@@ -137,8 +114,8 @@ From my 35-test profiling suite:
 | **Average direct lookup time** | 2ms |
 | **Average ring search time** | ~15ms |
 | **Regions not found** | 7/35 (20%) - deep ocean locations |
-| **Correct region identified** | 28/35 (80%) |
-| **Data quality issues** | 3 locations (Caribbean) |
+| **Regions identified** | 28/35 (80%) |
+| **Accuracy vs hplans data** | 28/28 (100%) |
 
 ## Conclusions
 
