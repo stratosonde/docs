@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>H3Lite STM32WL Profiling Results - Cesium Visualization</title>
+    
+    <!-- Cesium CSS -->
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    
+    <!-- H3-js library -->
+    <script src="https://unpkg.com/h3-js@4.1.0/dist/h3-js.umd.js"></script>
+    
+    <!-- Cesium JS -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        
+        #cesiumContainer {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(42, 42, 42, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        #controls h3 {
+            margin: 0 0 10px 0;
+            color: #4fc3f7;
+            font-size: 18px;
+        }
+        
+        #controls h4 {
+            margin: 15px 0 10px 0;
+            color: #81c784;
+            font-size: 14px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .control-group select option {
+            background: #2a2a2a;
+            color: white;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: rgba(100, 100, 100, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #info {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        #info .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        #info .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            flex: 0 0 110px;
+        }
+        
+        #info .info-value {
+            color: white;
+            flex: 1;
+            text-align: right;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            color: #81c784;
+        }
+        
+        .status-warning {
+            color: #ffd93d;
+        }
+        
+        .status-error {
+            color: #ff6b6b;
+        }
+        
+        .legend {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .legend-box {
+            width: 20px;
+            height: 12px;
+            margin-right: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    
+    <div id="controls">
+        <h3>🎈 H3Lite Profiling Results</h3>
+        
+        <div class="control-group">
+            <label for="scenarioSelect">Select Test Scenario:</label>
+            <select id="scenarioSelect" size="10">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        
+        <button id="visualizeButton">Visualize Scenario</button>
+        <button id="screenshotButton">📷 Save Screenshot</button>
+        
+        <div id="info" style="display: none;">
+            <!-- Info will be populated by JavaScript -->
+        </div>
+        
+        <div class="legend">
+            <h4 style="margin: 0 0 8px 0; color: #81c784;">Legend</h4>
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(255, 255, 255, 0.6);"></div>
+                <span>Center Hex (balloon location)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(100, 200, 255, 0.4); border-color: rgba(100, 200, 255, 0.8);"></div>
+                <span>Ring Search (expanding outward)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: rgba(255, 107, 107, 0.3);"></div>
+                <span>Region Hexes (nearby coverage)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Cesium viewer
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkZDkxYWI1OS03ZTE3LTQ2MWYtOWYzZC0wOTFjNTVjNDk1YjkiLCJpZCI6MzU1Mzc0LCJpYXQiOjE3NjE3OTU1Mzl9.vNxpbZp0jbg4zORX7jl1yblDObO8N35pRO5wbOY3BPM';
+
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            animation: false,
+            timeline: false,
+            fullscreenButton: true,
+            vrButton: false
+        });
+
+        // Test scenarios from profiling data
+        const testScenarios = [
+            { id: 1, name: "NYC, USA", lat: 40.7128, lng: -74.0059, expected: "US915", actual: "NOT FOUND", foundRegion: "US915", rings: 2, distance: 130, time: "8ms", status: "warning" },
+            { id: 2, name: "Los Angeles, USA", lat: 34.0522, lng: -118.2437, expected: "US915", actual: "US915", foundRegion: "US915", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 3, name: "Denver, USA", lat: 39.7392, lng: -104.9903, expected: "US915", actual: "US915", foundRegion: "US915", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 4, name: "Atlantic (off Florida)", lat: 27.0000, lng: -79.5000, expected: "US915", actual: "US915", foundRegion: "US915", rings: 1, distance: 65, time: "4ms", status: "success" },
+            { id: 5, name: "Pacific (100km W of CA)", lat: 35.0000, lng: -125.0000, expected: "US915", actual: "US915", foundRegion: "US915", rings: 4, distance: 260, time: "22ms", status: "success" },
+            { id: 6, name: "Paris, France", lat: 48.8566, lng: 2.3522, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 7, name: "London, UK", lat: 51.5074, lng: 0.1278, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 8, name: "Berlin, Germany", lat: 52.5200, lng: 13.4050, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 9, name: "Atlantic (W of Ireland)", lat: 50.0000, lng: -10.0000, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 1, distance: 65, time: "4ms", status: "success" },
+            { id: 10, name: "Mediterranean (S of France)", lat: 42.0000, lng: 5.0000, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 1, distance: 65, time: "4ms", status: "success" },
+            { id: 11, name: "Tokyo, Japan", lat: 35.7000, lng: 140.0000, expected: "AS923", actual: "AS923-1", foundRegion: "AS923-1", rings: 1, distance: 65, time: "4ms", status: "success" },
+            { id: 12, name: "Singapore", lat: 1.3521, lng: 103.8198, expected: "AS923", actual: "AS923-1B", foundRegion: "AS923-1B", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 13, name: "Bangkok, Thailand", lat: 13.7563, lng: 100.5018, expected: "AS923", actual: "AS923-1", foundRegion: "AS923-1", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 14, name: "Pacific (E of Japan)", lat: 35.0000, lng: 150.0000, expected: "AS923", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 15, name: "South China Sea", lat: 15.0000, lng: 115.0000, expected: "AS923", actual: "Unknown", foundRegion: "Unknown", rings: 3, distance: 195, time: "14ms", status: "warning" },
+            { id: 16, name: "Sydney, Australia", lat: -33.8688, lng: 151.2093, expected: "AU915", actual: "AU915", foundRegion: "AU915", rings: 1, distance: 65, time: "4ms", status: "success" },
+            { id: 17, name: "Melbourne, Australia", lat: -37.8136, lng: 144.9631, expected: "AU915", actual: "AU915", foundRegion: "AU915", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 18, name: "Tasman Sea", lat: -40.0000, lng: 160.0000, expected: "AU915", actual: "AS923-1C", foundRegion: "AS923-1C", rings: 6, distance: 390, time: "43ms", status: "warning" },
+            { id: 19, name: "Coral Sea", lat: -20.0000, lng: 155.0000, expected: "AU915", actual: "EU868", foundRegion: "EU868", rings: 3, distance: 195, time: "14ms", status: "warning" },
+            { id: 20, name: "New Delhi, India", lat: 28.6139, lng: 77.2090, expected: "IN865", actual: "IN865", foundRegion: "IN865", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 21, name: "Mumbai, India", lat: 19.0760, lng: 72.8777, expected: "IN865", actual: "IN865", foundRegion: "IN865", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 22, name: "Indian Ocean (W of India)", lat: 15.0000, lng: 65.0000, expected: "IN865", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 23, name: "Seoul, South Korea", lat: 37.5665, lng: 126.9780, expected: "KR920", actual: "KR920", foundRegion: "KR920", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 24, name: "Busan, South Korea", lat: 35.1796, lng: 129.0756, expected: "KR920", actual: "KR920", foundRegion: "KR920", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 25, name: "Sea of Japan", lat: 38.0000, lng: 133.0000, expected: "KR920", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 26, name: "Havana, Cuba", lat: 23.1136, lng: -82.3666, expected: "US915", actual: "AS923-3", foundRegion: "AS923-3", rings: 0, distance: 0, time: "2ms", status: "error" },
+            { id: 27, name: "San Juan, Puerto Rico", lat: 18.4655, lng: -66.1057, expected: "US915", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 28, name: "Kingston, Jamaica", lat: 17.9712, lng: -76.7936, expected: "US915", actual: "AU915", foundRegion: "AU915", rings: 0, distance: 0, time: "2ms", status: "error" },
+            { id: 29, name: "Martinique (French)", lat: 14.6415, lng: -61.0242, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 30, name: "Guadeloupe (French)", lat: 16.2650, lng: -61.5510, expected: "EU868", actual: "EU868", foundRegion: "EU868", rings: 0, distance: 0, time: "2ms", status: "success" },
+            { id: 31, name: "Curacao (Dutch)", lat: 12.1695, lng: -68.9900, expected: "EU868", actual: "AS923-1", foundRegion: "AS923-1", rings: 0, distance: 0, time: "2ms", status: "error" },
+            { id: 32, name: "Caribbean Sea (center)", lat: 15.0000, lng: -75.0000, expected: "?", actual: "US915", foundRegion: "US915", rings: 4, distance: 260, time: "22ms", status: "warning" },
+            { id: 33, name: "Mid-Atlantic Ocean", lat: 30.0000, lng: -40.0000, expected: "?", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 34, name: "Mid-Pacific Ocean", lat: 0.0000, lng: -160.0000, expected: "?", actual: "NOT FOUND", foundRegion: null, rings: 6, distance: 999, time: "43ms", status: "error" },
+            { id: 35, name: "Arctic Ocean", lat: 80.0000, lng: 0.0000, expected: "?", actual: "EU868", foundRegion: "EU868", rings: 2, distance: 130, time: "8ms", status: "success" }
+        ];
+
+        // Region colors
+        const regionColors = {
+            'US915': Cesium.Color.fromCssColorString('#FF6B6B'),
+            'EU868': Cesium.Color.fromCssColorString('#4ECDC4'),
+            'AU915': Cesium.Color.fromCssColorString('#FFD93D'),
+            'AS923-1': Cesium.Color.fromCssColorString('#95E1D3'),
+            'AS923-1B': Cesium.Color.fromCssColorString('#A8E6CF'),
+            'AS923-1C': Cesium.Color.fromCssColorString('#C7CEEA'),
+            'AS923-2': Cesium.Color.fromCssColorString('#FFDAC1'),
+            'AS923-3': Cesium.Color.fromCssColorString('#FF8C94'),
+            'KR920': Cesium.Color.fromCssColorString('#B4A7D6'),
+            'IN865': Cesium.Color.fromCssColorString('#F9ED69'),
+            'Unknown': Cesium.Color.fromCssColorString('#999999'),
+            'NOT FOUND': Cesium.Color.fromCssColorString('#666666')
+        };
+
+        // Store loaded region hexes
+        const regionH3Cache = {};
+
+        // Load and cache H3 hexes for a region from GeoJSON
+        async function loadRegionH3Hexes(regionName) {
+            if (regionH3Cache[regionName]) {
+                return regionH3Cache[regionName];
+            }
+
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/dewi-alliance/hplans/main/${regionName}.geojson`);
+                const geojson = await response.json();
+                
+                const h3Cells = new Set();
+                
+                // Process each feature in the GeoJSON
+                geojson.features.forEach(feature => {
+                    if (feature.geometry.type === 'Polygon') {
+                        const coords = feature.geometry.coordinates[0];
+                        const h3Polygon = coords.map(coord => [coord[1], coord[0]]);
+                        const cells = h3.polygonToCells(h3Polygon, 3);
+                        cells.forEach(cell => h3Cells.add(cell));
+                    } else if (feature.geometry.type === 'MultiPolygon') {
+                        feature.geometry.coordinates.forEach(polygon => {
+                            const coords = polygon[0];
+                            const h3Polygon = coords.map(coord => [coord[1], coord[0]]);
+                            const cells = h3.polygonToCells(h3Polygon, 3);
+                            cells.forEach(cell => h3Cells.add(cell));
+                        });
+                    }
+                });
+
+                regionH3Cache[regionName] = Array.from(h3Cells);
+                return regionH3Cache[regionName];
+            } catch (error) {
+                console.error(`Error loading region ${regionName}:`, error);
+                return [];
+            }
+        }
+
+        // Draw all H3 hexes for a region
+        function drawRegionHexes(regionName, regionColor) {
+            const hexes = regionH3Cache[regionName] || [];
+            
+            hexes.forEach(cell => {
+                const boundary = h3.cellToBoundary(cell);
+                const positions = boundary.map(coord => 
+                    Cesium.Cartesian3.fromDegrees(coord[1], coord[0])
+                );
+
+                viewer.entities.add({
+                    name: `Region: ${regionName}`,
+                    polygon: {
+                        hierarchy: new Cesium.PolygonHierarchy(positions),
+                        material: regionColor.withAlpha(0.4),
+                        outline: true,
+                        outlineColor: regionColor.withAlpha(0.7),
+                        outlineWidth: 1,
+                        height: 0
+                    }
+                });
+            });
+        }
+
+        // Populate scenario dropdown
+        const select = document.getElementById('scenarioSelect');
+        testScenarios.forEach(scenario => {
+            const option = document.createElement('option');
+            option.value = scenario.id;
+            const statusIcon = scenario.status === 'success' ? '✅' : scenario.status === 'warning' ? '⚠️' : '❌';
+            option.textContent = `${statusIcon} ${scenario.name}`;
+            select.appendChild(option);
+        });
+
+        // Select first scenario by default
+        select.selectedIndex = 0;
+
+        // Visualize scenario
+        async function visualizeScenario(scenario) {
+            // Clear existing entities
+            viewer.entities.removeAll();
+
+            // Get H3 index for location
+            const h3Index = h3.latLngToCell(scenario.lat, scenario.lng, 3);
+            
+            // Load and draw full region hexes if found (use foundRegion which includes ring search results)
+            if (scenario.foundRegion) {
+                const regionColor = regionColors[scenario.foundRegion] || Cesium.Color.GRAY;
+                await loadRegionH3Hexes(scenario.foundRegion);
+                drawRegionHexes(scenario.foundRegion, regionColor);
+            }
+            
+            // Add balloon icon at location
+            viewer.entities.add({
+                position: Cesium.Cartesian3.fromDegrees(scenario.lng, scenario.lat, 10000),
+                billboard: {
+                    image: 'data:image/svg+xml;base64,' + btoa(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+                            <ellipse cx="24" cy="24" rx="20" ry="24" fill="#FF6B6B" stroke="#FFFFFF" stroke-width="2"/>
+                            <ellipse cx="24" cy="24" rx="16" ry="20" fill="#FF8C94" opacity="0.6"/>
+                            <line x1="24" y1="48" x2="24" y2="58" stroke="#666666" stroke-width="2"/>
+                            <rect x="20" y="58" width="8" height="6" fill="#666666" rx="2"/>
+                        </svg>
+                    `),
+                    scale: 0.8,
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM
+                },
+                name: `🎈 ${scenario.name}`,
+                description: `Location: ${scenario.lat.toFixed(4)}°, ${scenario.lng.toFixed(4)}°<br>` +
+                            `H3 Index: ${h3Index}<br>` +
+                            `Expected: ${scenario.expected}<br>` +
+                            `Actual: ${scenario.actual}<br>` +
+                            `Time: ${scenario.time}`
+            });
+
+            // Draw center hex (where balloon is)
+            const centerBoundary = h3.cellToBoundary(h3Index);
+            const centerPositions = centerBoundary.map(coord => 
+                Cesium.Cartesian3.fromDegrees(coord[1], coord[0])
+            );
+            
+            viewer.entities.add({
+                name: 'Center Hex',
+                polygon: {
+                    hierarchy: new Cesium.PolygonHierarchy(centerPositions),
+                    material: Cesium.Color.WHITE.withAlpha(0.15),
+                    outline: true,
+                    outlineColor: Cesium.Color.WHITE,
+                    outlineWidth: 3,
+                    height: 0
+                }
+            });
+
+            // Draw k-rings if ring search was needed (make them visually distinct)
+            if (scenario.rings > 0) {
+                for (let ring = 1; ring <= scenario.rings; ring++) {
+                    const ringCells = h3.gridDisk(h3Index, ring).filter(cell => {
+                        // Only include cells at exact ring distance
+                        return h3.gridDistance(h3Index, cell) === ring;
+                    });
+
+                    // Bright yellow/cyan for ring search - outline only, no fill
+                    const outlineColor = Cesium.Color.fromCssColorString('#00FFFF'); // Cyan
+                    const outlineWidth = 3 - (ring * 0.3); // Thicker for inner rings
+
+                    ringCells.forEach(cell => {
+                        const boundary = h3.cellToBoundary(cell);
+                        const positions = boundary.map(coord => 
+                            Cesium.Cartesian3.fromDegrees(coord[1], coord[0])
+                        );
+
+                        viewer.entities.add({
+                            name: `Ring ${ring}`,
+                            polygon: {
+                            hierarchy: new Cesium.PolygonHierarchy(positions),
+                                material: Cesium.Color.TRANSPARENT,
+                                outline: true,
+                                outlineColor: outlineColor.withAlpha(0.9 - (ring * 0.1)),
+                                outlineWidth: Math.max(outlineWidth, 1.5),
+                                height: 0
+                            }
+                        });
+                    });
+                }
+            }
+
+            // Update info panel
+            const info = document.getElementById('info');
+            info.style.display = 'block';
+            
+            const statusClass = `status-${scenario.status}`;
+            const distanceText = scenario.distance === 999 ? 'No region found' : `${scenario.distance} km`;
+            
+            info.innerHTML = `
+                <div class="info-row">
+                    <span class="info-label">Location:</span>
+                    <span class="info-value">${scenario.name}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Coordinates:</span>
+                    <span class="info-value">${scenario.lat.toFixed(4)}°, ${scenario.lng.toFixed(4)}°</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">H3 Index:</span>
+                    <span class="info-value" style="font-size: 10px;">${h3Index}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Expected:</span>
+                    <span class="info-value">${scenario.expected}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Actual Result:</span>
+                    <span class="info-value ${statusClass}">${scenario.actual}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ring Search:</span>
+                    <span class="info-value">${scenario.rings} rings</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Distance:</span>
+                    <span class="info-value">${distanceText}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Lookup Time:</span>
+                    <span class="info-value">${scenario.time}</span>
+                </div>
+            `;
+
+            // Fly to location - look directly at the scenario location
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(scenario.lng, scenario.lat, 1500000),
+                orientation: {
+                    heading: Cesium.Math.toRadians(0),
+                    pitch: Cesium.Math.toRadians(-90), // Look straight down
+                    roll: 0.0
+                },
+                duration: 2
+            });
+        }
+
+        // Event handlers
+        document.getElementById('visualizeButton').addEventListener('click', () => {
+            const selectedId = parseInt(document.getElementById('scenarioSelect').value);
+            const scenario = testScenarios.find(s => s.id === selectedId);
+            if (scenario) {
+                visualizeScenario(scenario);
+            }
+        });
+
+        document.getElementById('screenshotButton').addEventListener('click', () => {
+            // Wait a moment to ensure rendering is complete
+            setTimeout(() => {
+                const canvas = viewer.scene.canvas;
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    const selectedId = parseInt(document.getElementById('scenarioSelect').value);
+                    const scenario = testScenarios.find(s => s.id === selectedId);
+                    a.href = url;
+                    a.download = `h3lite-profiling-${scenario.id}-${scenario.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            }, 500);
+        });
+
+        // Visualize first scenario on load
+        visualizeScenario(testScenarios[0]);
+    </script>
+</body>
+</html>

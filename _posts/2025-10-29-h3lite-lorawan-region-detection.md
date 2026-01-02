@@ -301,13 +301,16 @@ The implementation achieves our design goals:
 - Runtime RAM: <100 bytes
 - **Total: ~46KB flash, <1KB RAM**
 
-**Timing Performance** (target STM32WLE5 @ 48MHz)
-- `latLngToH3()`: TBD (target <100 milliseconds)
-- Binary search: TBD (target <100 milliseconds)
-- `latLngToRegion()`: TBD (target <200 milliseconds total)
-- `findNearestRegions()`: TBD (target <1000 milliseconds 2 rings)
+**Timing Performance** (STM32WLE5 @ 48MHz - measured)
+- `latLngToRegion()` direct lookup: **2ms**
+- Ring 1 search: **4ms** (~65km radius)
+- Ring 2 search: **8ms** (~130km radius)
+- Ring 3 search: **14ms** (~195km radius)
+- Ring 4 search: **22ms** (~260km radius)
+- Ring 5 search: **32ms** (~325km radius)
+- Ring 6 search: **43ms** (~390km radius)
 
-Region detection is designed to be effectively instantaneous compared to GPS acquisition (1-60 seconds) and LoRaWAN transmission (several seconds).
+Region detection is effectively instantaneous compared to GPS acquisition (1-60 seconds) and LoRaWAN transmission (several seconds). Direct lookups complete in just 2ms, while even the most exhaustive 6-ring offshore search completes in under 50ms.
 
 **Accuracy**
 At resolution 3 (~100-130km cell size), boundary accuracy is typically within 50-100km of actual regulatory boundaries. This is more than adequate for stratospheric applications where:
@@ -519,11 +522,14 @@ For embedded developers facing similar challenges, H3Lite is available as open-s
 | Target MCU | STM32WLE5JC (ARM Cortex-M4) |
 | Flash Usage | 46KB (tables) + 4KB (code) = 50KB |
 | RAM Usage | <1KB |
-| Lookup Time | TBD (target <200 microseconds) |
+| Lookup Time | 2ms direct, 8ms (2-ring offshore search) |
 | Resolution | H3 Resolution 3 (~100-130km cells) |
 | Coverage | 16 regions globally (15 LoRaWAN + 1 Unknown) |
 | Table Entries | 10,953 entries |
 | Accuracy | ±50-100km at region boundaries |
+
+**Related Posts:**
+- [H3Lite Hardware Validation: STM32WL Profiling Results]({{ site.baseurl }}{% post_url 2025-12-27-h3lite-stm32wl-hardware-validation %}) - Real hardware timing measurements and profiling data
 
 **Supported Regions**
 - **LoRaWAN Regions (15)**: EU868, US915, CN470, AU915, AS923-1, AS923-1B, AS923-1C, AS923-2, AS923-3, AS923-4, KR920, IN865, RU864, EU433, CD900-1A
