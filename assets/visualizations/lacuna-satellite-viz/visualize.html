@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Lacuna Satellite Visualization</title>
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(42, 42, 42, 0.9);
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            max-width: 300px;
+        }
+        #info h2 {
+            margin-top: 0;
+            color: #00d4ff;
+        }
+        #info p {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .button {
+            background: #00d4ff;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #00a8cc;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer"></div>
+    <div id="info">
+        <h2>🛰️ Lacuna Satellites</h2>
+        <p id="satInfo">Loading satellite data...</p>
+        <p><strong>Controls:</strong></p>
+        <p>• Left click + drag: Rotate<br>
+           • Right click + drag: Pan<br>
+           • Scroll: Zoom<br>
+           • Middle click: Tilt</p>
+        <button class="button" onclick="viewer.clock.shouldAnimate = !viewer.clock.shouldAnimate">
+            ⏯ Play/Pause
+        </button>
+        <button class="button" onclick="viewer.clock.multiplier = viewer.clock.multiplier === 60 ? 300 : 60">
+            ⏩ Speed
+        </button>
+    </div>
+
+    <script>
+        // Using a public access token for testing
+        // For production, get your own free token at https://cesium.com/ion/signup
+        //Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYWE1OWUxNy1mMWZiLTQzYjYtYTQ0OS1kMWFjYmFkNjc5YzYiLCJpZCI6NTc3MzMsImlhdCI6MTYyNzg0NTE4Mn0.XcKpgANiY19MC4bdFUXMVEBToBmqS8kuYpUlxJHYZxk';
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkZDkxYWI1OS03ZTE3LTQ2MWYtOWYzZC0wOTFjNTVjNDk1YjkiLCJpZCI6MzU1Mzc0LCJpYXQiOjE3NjE3OTU1Mzl9.vNxpbZp0jbg4zORX7jl1yblDObO8N35pRO5wbOY3BPM'
+        // Create the Cesium viewer
+        const viewer = new Cesium.Viewer('cesiumContainer', {
+            timeline: true,
+            animation: true,
+            baseLayerPicker: true,
+            geocoder: true,
+            homeButton: true,
+            infoBox: true,
+            sceneModePicker: true,
+            selectionIndicator: true,
+            navigationHelpButton: true,
+            shouldAnimate: true
+        });
+
+        // Load the CZML satellite data
+        async function loadSatellites() {
+            try {
+                const response = await fetch('satellites.czml');
+                const czmlData = await response.json();
+                
+                const dataSource = await Cesium.CzmlDataSource.load(czmlData);
+                await viewer.dataSources.add(dataSource);
+                
+                // Update info
+                const entities = dataSource.entities.values;
+                const satCount = entities.filter(e => e.id.startsWith('satellite_')).length;
+                document.getElementById('satInfo').innerHTML = 
+                    `<strong>${satCount} satellites tracked</strong><br>` +
+                    `Yellow trails show 1-hour path<br>` +
+                    `Click satellites for details`;
+                
+                // Set initial view
+                viewer.camera.flyTo({
+                    destination: Cesium.Cartesian3.fromDegrees(-114.07, 51.04, 2000000),
+                    orientation: {
+                        heading: Cesium.Math.toRadians(0),
+                        pitch: Cesium.Math.toRadians(-45),
+                        roll: 0.0
+                    }
+                });
+                
+                // Set clock multiplier for faster playback
+                viewer.clock.multiplier = 60;
+                
+                console.log(`Loaded ${satCount} satellites`);
+            } catch (error) {
+                document.getElementById('satInfo').innerHTML = 
+                    '<strong style="color: #ff4444;">Error loading satellites!</strong><br>' +
+                    'Make sure satellites.czml exists.<br>' +
+                    'Run: ./lpp2_trajectories';
+                console.error('Error loading CZML:', error);
+            }
+        }
+
+        // Optional: Add balloon position marker
+        function addBalloonMarker(lat, lon, alt) {
+            viewer.entities.add({
+                name: 'Balloon Position',
+                position: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
+                point: {
+                    pixelSize: 10,
+                    color: Cesium.Color.RED,
+                    outlineColor: Cesium.Color.WHITE,
+                    outlineWidth: 2
+                },
+                label: {
+                    text: 'Balloon',
+                    font: '14pt sans-serif',
+                    style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+                    outlineWidth: 2,
+                    verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+                    pixelOffset: new Cesium.Cartesian2(0, -9)
+                }
+            });
+        }
+
+        // Example: Add balloon at Calgary
+        addBalloonMarker(51.0447, -114.0719, 30000); // 30km altitude
+
+        // Load the satellites
+        loadSatellites();
+
+        // Enable lighting
+        viewer.scene.globe.enableLighting = true;
+    </script>
+</body>
+</html>
