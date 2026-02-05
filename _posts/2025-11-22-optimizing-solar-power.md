@@ -6,6 +6,9 @@ categories: hardware power
 tags: [solar, power, mppt, energy harvesting, hardware, testing]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/The_Brutal_Geometry_of_Stratospheric_Solar_Power.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # Optimizing Solar Power Collection for StratoSonde
 
 Solar power is the lifeblood of long-duration stratospheric balloon missions, but extracting maximum energy from small panels requires more than plugging in a datasheet value. For Stratosonde, I needed to answer three critical questions: How much power can we actually harvest? What's the optimal panel orientation for a free-spinning payload? And how do we configure the power management IC to capture every available milliwatt?
@@ -116,3 +119,4 @@ With the MPP characterized, the next step is to validate the full charging path 
 ---
 
 *Raw characterization data: [solar_power_test_data.csv]({{ site.baseurl }}/assets/data/solar_power_test_data.csv)*
+

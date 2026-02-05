@@ -2,6 +2,9 @@
 layout: post
 title: "HTC1015 LTO Cell Temperature Characterization: Confronting Stratospheric Cold"
 date: 2025-11-23 09:30:00 -0700
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_Stratosphere_with_Frozen_Batteries.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: hardware battery testing
 tags: [LTO, lithium titanate, battery, temperature, characterization, power architecture, stratosphere]
 ---
@@ -623,3 +626,4 @@ This post is part of the Stratosonde power system characterization series:
 *Raw characterization data: [htc1015_temperature_test.csv]({{ site.baseurl }}/assets/data/htc1015_temperature_test.csv)*
 
 *HTC1015 Datasheet: [华慧规格书HTC1015-40(单电芯).pdf](https://github.com/stratosonde/hardware/blob/main/datasheets/%E5%8D%8E%E6%85%A7%E8%A7%84%E6%A0%BC%E4%B9%A6HTC1015-40(%E5%8D%95%E7%94%B5%E8%8A%AF).pdf)*
+

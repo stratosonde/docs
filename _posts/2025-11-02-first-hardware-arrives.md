@@ -6,6 +6,9 @@ categories: hardware build
 tags: [pcba, jlcpcb, smt, assembly, components, hardware, lto, solar]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Stratosonde_Hardware_vs_The_15_Gram_Limit.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # First Hardware from JLCPCB
 
 After months of design work, the first manufactured Stratosonde PCBAs have arrived from JLCPCB! This is a major milestone - seeing the design transition from schematic to actual hardware you can hold in your hand.
@@ -149,3 +152,4 @@ Next up: getting the firmware running and conducting the first powered tests!
 *Weight specifications sourced from [Stratosonde Product Specification]({{ site.baseurl }}/Stratosonde.pdf)*
 
 *For more information on the power system design: [Power Budget Calculator](https://stratosonde.github.io/.github/profile/solar_radiosonde_power_budget.html)*
+

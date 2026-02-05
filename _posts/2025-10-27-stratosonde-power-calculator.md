@@ -6,6 +6,9 @@ categories: tools
 tags: [calculator, power, solar, battery, radiosonde, stratosonde, energy]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_Stratosphere_with_15_Grams.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # Introducing the Stratosonde Power Budget Calculator
 
 I'm excited to announce the launch of our comprehensive Power Budget Calculator for the Stratosonde project—an interactive tool designed to help you balance power consumption, solar harvesting, and battery capacity for ultra-lightweight, solar-powered radiosondes operating in extreme high-altitude environments.
@@ -277,3 +280,4 @@ To learn more about the Stratosonde project:
 - [Power Management Documentation](https://github.com/stratosonde/firmware/blob/main/docs/PowerManagement.md) - Detailed firmware implementation
 
 Happy calculating, and may your radiosondes fly long and far!
+

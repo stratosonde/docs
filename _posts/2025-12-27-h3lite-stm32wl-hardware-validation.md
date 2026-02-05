@@ -2,6 +2,9 @@
 layout: post
 title: "H3Lite Hardware Validation: STM32WL Profiling Results"
 date: 2025-12-27
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Mapping_The_World_With_1KB_RAM.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: technical firmware
 author: englotk
 --- 
@@ -169,3 +172,4 @@ Explore the profiling results interactively using the CesiumJS visualization bel
 | RAM Usage | <1KB |
 | Test Points | 35 global locations |
 | Success Rate | 80% (28/35) |
+

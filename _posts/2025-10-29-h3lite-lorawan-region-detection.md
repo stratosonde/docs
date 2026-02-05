@@ -6,6 +6,9 @@ categories: technical firmware
 author: englotk
 --- 
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Fitting_Global_Radio_Borders_Into_50KB.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 ## The Challenge: A Radiosonde That Knows Where It Is
 
 When designing the Stratosonde, an ultra-lightweight, solar-powered radiosonde intended for long-duration autonomous flights in the stratosphere there was a fundamental challenge: how does a device that crosses continents and oceans automatically configure itself to transmit on the correct LoRaWAN frequencies?
@@ -534,3 +537,4 @@ For embedded developers facing similar challenges, H3Lite is available as open-s
 **Supported Regions**
 - **LoRaWAN Regions (15)**: EU868, US915, CN470, AU915, AS923-1, AS923-1B, AS923-1C, AS923-2, AS923-3, AS923-4, KR920, IN865, RU864, EU433, CD900-1A
 - **Special Regions (1)**: Unknown (prohibited transmission areas: North Korea, Libya, Sudan, Yemen, Nepal, Mongolia, Central Asian states)
+

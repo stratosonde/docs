@@ -6,6 +6,9 @@ categories: hardware sensors testing
 tags: [humidity, AD7746, capacitive sensing, sensors, characterization, stratosphere, SHT31, temperature]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Building_a_Frankenstein_Sensor_for_the_Stratosphere.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # Precision Humidity Sensing for Stratospheric Flight: Replacing the SHT31
 
 The Stratosonde currently carries a Sensirion SHT31 digital humidity sensor—a reliable, low-power device that works perfectly for terrestrial weather stations. But stratospheric balloons don't operate in terrestrial conditions. At float altitude, the SHT31 hits two fundamental limits: it stops functioning below -40°C, and its accuracy degrades catastrophically below 5% relative humidity. The stratosphere routinely operates at -56.5°C with sub-1% RH. **The SHT31 wasn't designed for this environment, and no amount of clever firmware can change the physics.**
@@ -524,3 +527,4 @@ This post is part of the Stratosonde sensor characterization series:
 *DHP14 Humidity Sensor: [Innovative Sensor_DHP14-Rapid-W_5.pdf](https://github.com/stratosonde/hardware/blob/main/datasheets/Innovative%20Sensor_DHP14-Rapid-W_5.pdf)*
 
 *PT1000 RTD Datasheet: [DTP600_E.pdf](https://github.com/stratosonde/hardware/blob/main/datasheets/DTP600_E.pdf)*
+

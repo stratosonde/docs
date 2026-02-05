@@ -2,6 +2,9 @@
 layout: post
 title: "LoRaWAN Energy Budget for Stratospheric Operations"
 date: 2025-12-06 11:00:00 -0700
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Transmitting_From_Space_With_Frozen_Batteries.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: firmware power rf
 tags: [lorawan, energy, spreading factor, SF7, SF10, stratosphere, US915, power budget, transmission]
 ---
@@ -271,3 +274,4 @@ This post completes the Stratosonde power system characterization series:
 *LoRaWAN parameters: STM32WLE5 integrated radio, +14 dBm TX power, 125 kHz bandwidth, 4/5 coding rate, US915 frequency plan.*
 
 *Raw energy data: [lorawan_energy_data.csv]({{ site.baseurl }}/assets/data/lorawan_energy_data.csv)*
+

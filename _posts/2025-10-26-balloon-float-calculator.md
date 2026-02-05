@@ -7,6 +7,9 @@ categories: tools
 tags: [calculator, balloon, float, superpressure, physics]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Parking_Picoballoons_in_the_Stratosphere.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # Introducing the Balloon Float Calculator
 
 I'm excited to announce the launch of our new interactive Balloon Float Calculator, a comprehensive educational tool for designing superpressure balloon flights. This calculator replaces our previous float calculator with a more detailed, step-by-step approach that helps users understand the physics behind balloon flight.

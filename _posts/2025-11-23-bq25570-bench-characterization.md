@@ -6,6 +6,9 @@ categories: hardware power testing
 tags: [bq25570, energy harvesting, solar, power, mppt, boost converter, characterization, testing]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Bench_Testing_The_BQ25570_For_Stratosonde.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # BQ25570 Bench Characterization: Validating Energy Harvesting for Ultra-Low Voltage Solar Cells
 
 Energy harvesting ICs like the Texas Instruments BQ25570 promise to extract usable power from ultra-low voltage sources—solar cells producing 0.5V, thermoelectric generators, piezoelectric elements—and boost it up to charge lithium batteries. But how well do they actually work? What's the real-world efficiency? And critically for StratoSonde: can a boost converter efficiently handle two series-connected 0.5V solar cells (1.0V nominal) charging a 4.4V LTO battery pack?
@@ -260,3 +263,4 @@ Sometimes the best validation comes not from reading datasheets, but from measur
 ---
 
 *Raw characterization data available: [bq25570.csv]({{ site.baseurl }}/assets/images/posts/2025-11-23-bq25570-bench-characterization/bq25570.csv)*
+

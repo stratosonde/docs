@@ -6,6 +6,9 @@ categories: firmware satellite communications
 tags: [lacuna, satellite, lorawan, leo, pass-prediction, orbital-mechanics, power-management, gps]
 ---
 
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Predicting_Satellite_Passes_from_a_Drifting_Balloon.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
+
 # Satellite Pass Prediction for a Moving Platform: Lacuna LoRaWAN from Stratospheric Balloons
 
 Traditional satellite pass prediction assumes a stationary observer—a ground station with a fixed latitude and longitude, patiently waiting for satellites to arc across the sky on predictable schedules. Compute the orbital parameters once, generate a pass table for the next week, set alarm clocks, profit. The mathematics are well-understood, the software is mature, and the approach works perfectly for terrestrial applications.
@@ -669,4 +672,5 @@ This post is part of the Stratosonde communications architecture series:
 *Lacuna Space: [https://lacuna.space](https://lacuna.space)*
 
 *Interactive Visualization: [Lacuna Satellite Pass Predictor](/assets/visualizations/lacuna-satellite-viz/visualize.html)*
+
 

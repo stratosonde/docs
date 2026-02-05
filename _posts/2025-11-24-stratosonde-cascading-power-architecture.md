@@ -2,6 +2,9 @@
 layout: post
 title: "Stratosonde Cascading Power Architecture: Engineering for Graceful Degradation at -60°C"
 date: 2025-11-24 20:00:00 -0700
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_Negative_Sixty_With_Cascading_Power.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: hardware power architecture
 tags: [power systems, supercapacitor, LTO, ceramic capacitor, solar, stratosphere, thermal management]
 ---
@@ -668,3 +671,4 @@ The physics of electrochemistry at -60°C is unforgiving. But with enough engine
 *Test data: [lto_supercap_test_data.csv]({{ site.baseurl }}/assets/data/lto_supercap_test_data.csv)*
 
 *Related: [HTC1015 LTO Temperature Characterization]({% post_url 2025-11-23-htc1015-lto-temperature-characterization %})*
+
