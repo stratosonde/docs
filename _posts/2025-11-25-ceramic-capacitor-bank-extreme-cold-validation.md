@@ -6,7 +6,7 @@ categories: hardware power testing
 tags: [ceramic capacitor, LTO, supercapacitor, temperature, characterization, power architecture, stratosphere, extreme cold]
 ---
 
-> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_-70°C_Supercapacitor_Freeze.m4a)  
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_-70C_Supercapacitor_Freeze.m4a)  
 > *An AI-generated audio discussion created by Google's NotebookLM*
 
 # Ceramic Capacitor Bank Validation: The Final Power Layer at -70°C
