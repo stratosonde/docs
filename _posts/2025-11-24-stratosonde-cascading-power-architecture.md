@@ -2,12 +2,12 @@
 layout: post
 title: "Stratosonde Cascading Power Architecture: Engineering for Graceful Degradation at -60°C"
 date: 2025-11-24 20:00:00 -0700
-
-> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_Negative_Sixty_With_Cascading_Power.m4a)  
-> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: hardware power architecture
 tags: [power systems, supercapacitor, LTO, ceramic capacitor, solar, stratosphere, thermal management]
 ---
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_Negative_Sixty_With_Cascading_Power.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 
 # Stratosonde Cascading Power Architecture: Engineering for Graceful Degradation at -60°C
 

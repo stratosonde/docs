@@ -2,12 +2,12 @@
 layout: post
 title: "HTC1015 LTO Cell Temperature Characterization: Confronting Stratospheric Cold"
 date: 2025-11-23 09:30:00 -0700
-
-> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_Stratosphere_with_Frozen_Batteries.m4a)  
-> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: hardware battery testing
 tags: [LTO, lithium titanate, battery, temperature, characterization, power architecture, stratosphere]
 ---
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Surviving_the_Stratosphere_with_Frozen_Batteries.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 
 # HTC1015 LTO Cell Temperature Characterization: Confronting Stratospheric Cold
 

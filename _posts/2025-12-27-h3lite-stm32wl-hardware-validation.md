@@ -1,13 +1,14 @@
 ---
 layout: post
 title: "H3Lite Hardware Validation: STM32WL Profiling Results"
-date: 2025-12-27
+date: 2025-12-27 08:00:00 -0700
+categories: technical firmware
+author: englotk
+tags: [h3lite, stm32wl, profiling, geospatial, lorawan, testing]
+---
 
 > **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Mapping_The_World_With_1KB_RAM.m4a)  
 > *An AI-generated audio discussion created by Google's NotebookLM*
-categories: technical firmware
-author: englotk
---- 
 
 ## From Theory to Hardware: Validating H3Lite on STM32WL
 
