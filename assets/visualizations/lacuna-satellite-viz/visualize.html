@@ -14,37 +14,76 @@
             overflow: hidden;
             font-family: Arial, sans-serif;
         }
-        #info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(42, 42, 42, 0.9);
-            padding: 15px;
-            border-radius: 5px;
-            color: white;
-            z-index: 1000;
-            max-width: 300px;
-        }
-        #info h2 {
-            margin-top: 0;
-            color: #00d4ff;
-        }
-        #info p {
-            margin: 5px 0;
-            font-size: 12px;
-        }
-        .button {
-            background: #00d4ff;
-            color: black;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        .button:hover {
-            background: #00a8cc;
-        }
+    #info {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(42, 42, 42, 0.9);
+        padding: 15px;
+        border-radius: 5px;
+        color: white;
+        z-index: 1000;
+        max-width: 350px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    #info h2 {
+        margin-top: 0;
+        color: #00d4ff;
+    }
+    #info p {
+        margin: 5px 0;
+        font-size: 12px;
+    }
+    .button {
+        background: #00d4ff;
+        color: black;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        margin: 5px 5px 5px 0;
+        font-size: 11px;
+    }
+    .button:hover {
+        background: #00a8cc;
+    }
+    .input-group {
+        margin: 10px 0;
+    }
+    .input-group label {
+        display: block;
+        font-size: 11px;
+        color: #00d4ff;
+        margin-bottom: 3px;
+    }
+    .input-group input {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #555;
+        border-radius: 3px;
+        background: #2a2a2a;
+        color: white;
+        font-size: 12px;
+        box-sizing: border-box;
+    }
+    .coverage-legend {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #555;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 3px 0;
+        font-size: 11px;
+    }
+    .legend-color {
+        width: 20px;
+        height: 12px;
+        margin-right: 8px;
+        border-radius: 2px;
+    }
     </style>
 </head>
 <body>
@@ -52,24 +91,110 @@
     <div id="info">
         <h2>🛰️ Lacuna Satellites</h2>
         <p id="satInfo">Loading satellite data...</p>
-        <p><strong>Controls:</strong></p>
-        <p>• Left click + drag: Rotate<br>
-           • Right click + drag: Pan<br>
-           • Scroll: Zoom<br>
-           • Middle click: Tilt</p>
-        <button class="button" onclick="viewer.clock.shouldAnimate = !viewer.clock.shouldAnimate">
-            ⏯ Play/Pause
-        </button>
-        <button class="button" onclick="viewer.clock.multiplier = viewer.clock.multiplier === 60 ? 300 : 60">
-            ⏩ Speed
-        </button>
+        
+        <div style="border-top: 1px solid #555; padding-top: 10px; margin-top: 10px;">
+            <p><strong>🎈 Balloon Position</strong></p>
+            <div class="input-group">
+                <label>Latitude (°)</label>
+                <input type="number" id="balloonLat" step="0.0001" value="51.0447">
+            </div>
+            <div class="input-group">
+                <label>Longitude (°)</label>
+                <input type="number" id="balloonLon" step="0.0001" value="-114.0719">
+            </div>
+            <div class="input-group">
+                <label>Altitude (m)</label>
+                <input type="number" id="balloonAlt" step="100" value="30000">
+            </div>
+            <button class="button" onclick="updateBalloonPosition()">
+                📍 Update Position
+            </button>
+            <button class="button" onclick="recomputeCoverage()">
+                🔄 Recompute Coverage
+            </button>
+            <p style="font-size: 10px; color: #888; margin-top: 5px;">
+                Click on globe to set position
+            </p>
+        </div>
+
+        <div id="coverageInfo" style="border-top: 1px solid #555; padding-top: 10px; margin-top: 10px;">
+            <p><strong>📡 Coverage</strong></p>
+            <p id="contactsInfo">No coverage data loaded</p>
+        </div>
+
+        <div class="coverage-legend">
+            <p><strong>Elevation Legend:</strong></p>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(0, 255, 0, 0.4);"></div>
+                <span>High (≥45°)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 255, 0, 0.4);"></div>
+                <span>Medium (20-45°)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 0, 0, 0.4);"></div>
+                <span>Low (&lt;20°)</span>
+            </div>
+        </div>
+
+        <div class="coverage-legend">
+            <p><strong>Link Budget Legend:</strong></p>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(0, 255, 0, 0.6);"></div>
+                <span>Excellent (≥15 dB)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 255, 0, 0.6);"></div>
+                <span>Good (6-15 dB)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 165, 0, 0.6);"></div>
+                <span>Marginal (0-6 dB)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255, 0, 0, 0.6);"></div>
+                <span>Poor (&lt;0 dB)</span>
+            </div>
+            <p style="font-size: 10px; color: #888; margin-top: 5px;">
+                Concentric rings: outer=low elev, center=zenith
+            </p>
+        </div>
+
+        <div style="border-top: 1px solid #555; padding-top: 10px; margin-top: 10px;">
+            <p><strong>Controls:</strong></p>
+            <p style="font-size: 11px;">
+                • Left drag: Rotate<br>
+                • Right drag: Pan<br>
+                • Scroll: Zoom
+            </p>
+            <button class="button" onclick="viewer.clock.shouldAnimate = !viewer.clock.shouldAnimate">
+                ⏯ Play/Pause
+            </button>
+            <button class="button" onclick="viewer.clock.multiplier = viewer.clock.multiplier === 60 ? 300 : 60">
+                ⏩ Speed
+            </button>
+            <button class="button" onclick="toggleCoverage()">
+                👁 Toggle Coverage
+            </button>
+            <button class="button" onclick="toggleLinkBudget()">
+                📊 Toggle Link Budget
+            </button>
+        </div>
     </div>
 
     <script>
         // Using a public access token for testing
-        // For production, get your own free token at https://cesium.com/ion/signup
-        //Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYWE1OWUxNy1mMWZiLTQzYjYtYTQ0OS1kMWFjYmFkNjc5YzYiLCJpZCI6NTc3MzMsImlhdCI6MTYyNzg0NTE4Mn0.XcKpgANiY19MC4bdFUXMVEBToBmqS8kuYpUlxJHYZxk';
         Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkZDkxYWI1OS03ZTE3LTQ2MWYtOWYzZC0wOTFjNTVjNDk1YjkiLCJpZCI6MzU1Mzc0LCJpYXQiOjE3NjE3OTU1Mzl9.vNxpbZp0jbg4zORX7jl1yblDObO8N35pRO5wbOY3BPM'
+        
+        // Global variables
+        let balloonEntity = null;
+        let coverageEntities = [];
+        let contactsData = null;
+        let coverageVisible = true;
+        let linkBudgetDiagrams = [];
+        let linkBudgetVisible = true;
+
         // Create the Cesium viewer
         const viewer = new Cesium.Viewer('cesiumContainer', {
             timeline: true,
@@ -84,6 +209,227 @@
             shouldAnimate: true
         });
 
+        // Enable lighting
+        viewer.scene.globe.enableLighting = true;
+
+        // ========================================
+        // LINK BUDGET CALCULATIONS
+        // ========================================
+
+        /**
+         * Calculate free-space path loss (FSPL) in dB
+         * FSPL = 32.44 + 20*log10(freq_MHz) + 20*log10(distance_km)
+         */
+        function calculateFSPL(frequencyHz, distanceKm) {
+            const freqMHz = frequencyHz / 1e6;
+            return 32.44 + 20 * Math.log10(freqMHz) + 20 * Math.log10(distanceKm);
+        }
+
+        /**
+         * Calculate atmospheric loss based on elevation angle
+         * Loss increases at low elevations (more atmosphere to penetrate)
+         */
+        function calculateAtmosphericLoss(elevationDeg) {
+            // Simplified model: 0.5 dB at zenith, increases toward horizon
+            // Uses 1/sin(elevation) approximation
+            if (elevationDeg < 5) elevationDeg = 5; // Avoid division by very small numbers
+            const elevRad = elevationDeg * Math.PI / 180;
+            const zenithLoss = 0.5; // dB at 90 degrees
+            return zenithLoss / Math.sin(elevRad);
+        }
+
+        /**
+         * Calculate slant range distance based on elevation angle
+         * Assumes LEO satellite at ~550km altitude
+         */
+        function calculateSlantRange(elevationDeg, satAltitudeKm = 550) {
+            const earthRadius = 6371; // km
+            const elevRad = elevationDeg * Math.PI / 180;
+            
+            // Using law of cosines
+            const a = earthRadius;
+            const b = earthRadius + satAltitudeKm;
+            const gamma = Math.PI / 2 + elevRad; // Angle at Earth's center
+            
+            const distance = Math.sqrt(a*a + b*b - 2*a*b*Math.cos(gamma));
+            return distance;
+        }
+
+        /**
+         * Calculate link margin for a given elevation angle
+         * Returns margin in dB
+         */
+        function calculateLinkMargin(elevationDeg, frequencyHz = 868e6, txPowerDbm = 30) {
+            // Constants
+            const rxSensitivity = -130; // dBm (typical for IoT satellite receiver)
+            const groundAntGain = 3; // dBi (simple whip antenna)
+            const satAntGain = 0; // dBi (omnidirectional)
+            
+            // Calculate losses
+            const slantRangeKm = calculateSlantRange(elevationDeg);
+            const fspl = calculateFSPL(frequencyHz, slantRangeKm);
+            const atmLoss = calculateAtmosphericLoss(elevationDeg);
+            const otherLosses = 2; // dB (misc losses: polarization, etc.)
+            
+            // Link budget: RX_power = TX_power + TX_gain + RX_gain - Losses
+            const rxPower = txPowerDbm + groundAntGain + satAntGain - fspl - atmLoss - otherLosses;
+            const margin = rxPower - rxSensitivity;
+            
+            return margin;
+        }
+
+        /**
+         * Get color for link margin value with smooth gradient
+         * Creates gradient from green (best) through yellow to red (worst)
+         */
+        function getLinkMarginColor(marginDb, elevationDeg) {
+            // Use elevation-based gradient for smoother "target" appearance
+            // High elevation (zenith) = green, low elevation (horizon) = red
+            const normalizedElev = elevationDeg / 90.0; // 0 to 1
+            
+            let r, g, b, a;
+            
+            if (normalizedElev > 0.7) {
+                // Top 70-100%: pure green (high elevations 63° to 90°)
+                const t = (normalizedElev - 0.7) / 0.3; // 0 to 1
+                r = Math.round(100 * (1 - t)); // Very little red, fading to 0
+                g = 255;
+                b = 0;
+                a = 0.4 + t * 0.3; // 0.4 to 0.7 opacity
+            } else if (normalizedElev > 0.35) {
+                // Middle 35-70%: green to yellow (31° to 63°)
+                const t = (normalizedElev - 0.35) / 0.35; // 0 to 1
+                r = Math.round(255 * (1 - t) * 0.6); // Gradually add red
+                g = 255;
+                b = 0;
+                a = 0.3 + t * 0.1; // 0.3 to 0.4 opacity
+            } else {
+                // Bottom 0-35%: yellow to red (10° to 31°)
+                const t = normalizedElev / 0.35; // 0 to 1
+                r = 255;
+                g = Math.round(255 * t);
+                b = 0;
+                a = 0.2 + t * 0.1; // 0.2 to 0.3 opacity
+            }
+            
+            return Cesium.Color.fromBytes(r, g, b, Math.round(a * 255));
+        }
+
+        /**
+         * Create polar diagram showing link budget vs elevation
+         * Returns array of polygon positions for Cesium
+         */
+        function createPolarDiagramPositions(centerLon, centerLat, maxRadiusMeters = 200000) {
+            const sectors = [];
+            const elevationSteps = [10, 20, 30, 45, 60, 75, 90];
+            
+            // Create concentric rings for different elevation angles
+            // Outer ring = low elevation (10°), inner = high elevation (90°)
+            for (let i = 0; i < elevationSteps.length; i++) {
+                const elevation = elevationSteps[i];
+                const nextElevation = i < elevationSteps.length - 1 ? elevationSteps[i + 1] : 90;
+                
+                // Ring radius decreases as elevation increases (bull's-eye pattern)
+                const outerRadius = maxRadiusMeters * (1 - elevation / 90);
+                const innerRadius = maxRadiusMeters * (1 - nextElevation / 90);
+                
+                // Calculate link margin for this elevation
+                const margin = calculateLinkMargin(elevation);
+                const color = getLinkMarginColor(margin, elevation);
+                
+                sectors.push({
+                    elevation: elevation,
+                    outerRadius: outerRadius,
+                    innerRadius: innerRadius,
+                    margin: margin,
+                    color: color
+                });
+            }
+            
+            return sectors;
+        }
+
+        /**
+         * Add link budget polar diagrams to satellites
+         */
+        function addLinkBudgetDiagrams(dataSource) {
+            // Clear existing diagrams
+            clearLinkBudgetDiagrams();
+            
+            if (!dataSource) return;
+            
+            const satellites = dataSource.entities.values.filter(e => e.id.startsWith('satellite_'));
+            
+            satellites.forEach(sat => {
+                if (!sat.position) return;
+                
+                // Get satellite position (use current time or first available)
+                const time = viewer.clock.currentTime;
+                const positionValue = sat.position.getValue(time);
+                
+                if (!positionValue) return;
+                
+                const cartographic = Cesium.Cartographic.fromCartesian(positionValue);
+                const lon = Cesium.Math.toDegrees(cartographic.longitude);
+                const lat = Cesium.Math.toDegrees(cartographic.latitude);
+                
+                // Create polar diagram at satellite location
+                const maxRadius = 300000; // 300km radius for visualization
+                const sectors = createPolarDiagramPositions(lon, lat, maxRadius);
+                
+                // Create concentric rings as ellipses
+                sectors.forEach((sector, index) => {
+                    if (sector.outerRadius <= 0) return;
+                    
+                    const entity = viewer.entities.add({
+                        id: `linkbudget_${sat.id}_ring_${index}`,
+                        name: `Link Budget ${sector.elevation}°`,
+                        position: sat.position, // Attach to satellite
+                        ellipse: {
+                            semiMinorAxis: sector.outerRadius,
+                            semiMajorAxis: sector.outerRadius,
+                            material: sector.color,
+                            outline: true,
+                            outlineColor: Cesium.Color.WHITE.withAlpha(0.3),
+                            outlineWidth: 1,
+                            height: 0
+                        },
+                        description: `Elevation: ${sector.elevation}°<br>` +
+                                   `Link Margin: ${sector.margin.toFixed(1)} dB<br>` +
+                                   `Quality: ${sector.margin >= 15 ? 'Excellent' : 
+                                              sector.margin >= 6 ? 'Good' : 
+                                              sector.margin >= 0 ? 'Marginal' : 'Poor'}`
+                    });
+                    
+                    linkBudgetDiagrams.push(entity);
+                });
+            });
+            
+            console.log(`Added ${linkBudgetDiagrams.length} link budget diagram rings`);
+        }
+
+        /**
+         * Clear all link budget diagrams
+         */
+        function clearLinkBudgetDiagrams() {
+            linkBudgetDiagrams.forEach(entity => viewer.entities.remove(entity));
+            linkBudgetDiagrams = [];
+        }
+
+        /**
+         * Toggle link budget diagram visibility
+         */
+        function toggleLinkBudget() {
+            linkBudgetVisible = !linkBudgetVisible;
+            linkBudgetDiagrams.forEach(entity => {
+                entity.show = linkBudgetVisible;
+            });
+        }
+
+        // ========================================
+        // SATELLITE AND COVERAGE LOADING
+        // ========================================
+
         // Load the CZML satellite data
         async function loadSatellites() {
             try {
@@ -93,12 +439,16 @@
                 const dataSource = await Cesium.CzmlDataSource.load(czmlData);
                 await viewer.dataSources.add(dataSource);
                 
+                // Add link budget diagrams to satellites
+                addLinkBudgetDiagrams(dataSource);
+                
                 // Update info
                 const entities = dataSource.entities.values;
                 const satCount = entities.filter(e => e.id.startsWith('satellite_')).length;
                 document.getElementById('satInfo').innerHTML = 
                     `<strong>${satCount} satellites tracked</strong><br>` +
                     `Yellow trails show 1-hour path<br>` +
+                    `Link budget diagrams attached<br>` +
                     `Click satellites for details`;
                 
                 // Set initial view
@@ -124,13 +474,19 @@
             }
         }
 
-        // Optional: Add balloon position marker
+        // Add balloon position marker
         function addBalloonMarker(lat, lon, alt) {
-            viewer.entities.add({
+            // Remove existing balloon if any
+            if (balloonEntity) {
+                viewer.entities.remove(balloonEntity);
+            }
+            
+            balloonEntity = viewer.entities.add({
+                id: 'balloon_marker',
                 name: 'Balloon Position',
                 position: Cesium.Cartesian3.fromDegrees(lon, lat, alt),
                 point: {
-                    pixelSize: 10,
+                    pixelSize: 12,
                     color: Cesium.Color.RED,
                     outlineColor: Cesium.Color.WHITE,
                     outlineWidth: 2
@@ -141,19 +497,243 @@
                     style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                     outlineWidth: 2,
                     verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-                    pixelOffset: new Cesium.Cartesian2(0, -9)
+                    pixelOffset: new Cesium.Cartesian2(0, -12)
+                },
+                description: `Lat: ${lat.toFixed(4)}°<br>Lon: ${lon.toFixed(4)}°<br>Alt: ${alt}m`
+            });
+            
+            return balloonEntity;
+        }
+
+        // Calculate coverage radius based on satellite altitude and min elevation
+        // Assuming satellites at ~500-600km altitude and minimum 10° elevation
+        function calculateCoverageRadius(maxElevation) {
+            // Simplified calculation: higher elevation = smaller footprint but better signal
+            // This is approximate - radius in meters at ground level
+            const satAltitude = 550000; // ~550km typical LEO satellite
+            const minElevation = 10; // minimum elevation in degrees
+            const earthRadius = 6371000; // Earth radius in meters
+            
+            const minElevRad = minElevation * Math.PI / 180;
+            const maxRadius = Math.sqrt(Math.pow(satAltitude + earthRadius, 2) - 
+                                       Math.pow(earthRadius * Math.cos(Math.PI/2 - minElevRad), 2)) -
+                             earthRadius * Math.sin(Math.PI/2 - minElevRad);
+            
+            return maxRadius;
+        }
+
+        // Get color based on elevation
+        function getElevationColor(elevation) {
+            if (elevation >= 45) {
+                return Cesium.Color.fromCssColorString('rgba(0, 255, 0, 0.3)');
+            } else if (elevation >= 20) {
+                return Cesium.Color.fromCssColorString('rgba(255, 255, 0, 0.3)');
+            } else {
+                return Cesium.Color.fromCssColorString('rgba(255, 0, 0, 0.3)');
+            }
+        }
+
+        // Load and display satellite contacts/coverage
+        async function loadCoverage() {
+            try {
+                const response = await fetch('satellite_contacts.json');
+                contactsData = await response.json();
+                
+                // Clear existing coverage
+                clearCoverage();
+                
+                const contacts = contactsData.contacts || [];
+                
+                if (contacts.length === 0) {
+                    document.getElementById('contactsInfo').innerHTML = 
+                        'No contacts found. Run ./lpp2_visualize to generate data.';
+                    return;
                 }
+                
+                // Draw coverage circles for each contact
+                contacts.forEach((contact, index) => {
+                    const elevation = contact.contact_max_elevation || contact.pass_max_elevation;
+                    const radius = calculateCoverageRadius(elevation);
+                    const color = getElevationColor(elevation);
+                    
+                    // Use PCA (Point of Closest Approach) location for coverage center
+                    const lat = contact.pass_pca_lat;
+                    const lon = contact.pass_pca_lon;
+                    
+                    // Skip contacts with invalid PCA coordinates (0,0 - null island)
+                    if (lat === 0 && lon === 0) {
+                        return; // Skip this contact
+                    }
+                    
+                    const entity = viewer.entities.add({
+                        id: `coverage_${index}`,
+                        name: `Sat ${contact.sat_id} Coverage`,
+                        position: Cesium.Cartesian3.fromDegrees(lon, lat, 0),
+                        ellipse: {
+                            semiMinorAxis: radius,
+                            semiMajorAxis: radius,
+                            material: color,
+                            outline: true,
+                            outlineColor: Cesium.Color.WHITE.withAlpha(0.5),
+                            outlineWidth: 1,
+                            height: 0
+                        },
+                        description: createContactDescription(contact)
+                    });
+                    
+                    coverageEntities.push(entity);
+                });
+                
+                // Update info panel
+                const maxElev = Math.max(...contacts.map(c => c.contact_max_elevation || 0));
+                const avgElev = contacts.reduce((sum, c) => sum + (c.contact_max_elevation || 0), 0) / contacts.length;
+                
+                document.getElementById('contactsInfo').innerHTML = 
+                    `<strong>${contacts.length} contacts</strong><br>` +
+                    `Max elevation: ${maxElev}°<br>` +
+                    `Avg elevation: ${avgElev.toFixed(1)}°<br>` +
+                    `Location: ${contactsData.location.latitude.toFixed(4)}°, ` +
+                    `${contactsData.location.longitude.toFixed(4)}°`;
+                
+                console.log(`Loaded ${contacts.length} contacts with coverage visualization`);
+            } catch (error) {
+                document.getElementById('contactsInfo').innerHTML = 
+                    '<span style="color: #ff4444;">No coverage data found</span><br>' +
+                    'Run ./lpp2_visualize to generate';
+                console.error('Error loading coverage:', error);
+            }
+        }
+
+        // Create description HTML for contact
+        function createContactDescription(contact) {
+            const startTime = new Date(contact.contact_start * 1000).toISOString();
+            const endTime = new Date(contact.contact_end * 1000).toISOString();
+            const duration = contact.contact_end - contact.contact_start;
+            
+            return `<strong>Satellite ${contact.sat_id}</strong><br>` +
+                   `Max Elevation: ${contact.contact_max_elevation}°<br>` +
+                   `Start: ${startTime}<br>` +
+                   `End: ${endTime}<br>` +
+                   `Duration: ${duration}s (${(duration/60).toFixed(1)}min)<br>` +
+                   `PCA: ${contact.pass_pca_lat.toFixed(4)}°, ${contact.pass_pca_lon.toFixed(4)}°`;
+        }
+
+        // Clear coverage visualization
+        function clearCoverage() {
+            coverageEntities.forEach(entity => viewer.entities.remove(entity));
+            coverageEntities = [];
+        }
+
+        // Toggle coverage visibility
+        function toggleCoverage() {
+            coverageVisible = !coverageVisible;
+            coverageEntities.forEach(entity => {
+                entity.show = coverageVisible;
             });
         }
 
-        // Example: Add balloon at Calgary
-        addBalloonMarker(51.0447, -114.0719, 30000); // 30km altitude
+        // Update balloon position from input fields
+        function updateBalloonPosition() {
+            const lat = parseFloat(document.getElementById('balloonLat').value);
+            const lon = parseFloat(document.getElementById('balloonLon').value);
+            const alt = parseFloat(document.getElementById('balloonAlt').value);
+            
+            if (isNaN(lat) || isNaN(lon) || isNaN(alt)) {
+                alert('Please enter valid numbers for latitude, longitude, and altitude');
+                return;
+            }
+            
+            if (lat < -90 || lat > 90) {
+                alert('Latitude must be between -90 and 90');
+                return;
+            }
+            
+            if (lon < -180 || lon > 180) {
+                alert('Longitude must be between -180 and 180');
+                return;
+            }
+            
+            addBalloonMarker(lat, lon, alt);
+            
+            // Fly to new position
+            viewer.camera.flyTo({
+                destination: Cesium.Cartesian3.fromDegrees(lon, lat, alt * 10),
+                duration: 2.0
+            });
+        }
 
-        // Load the satellites
+        // Recompute coverage for new position
+        async function recomputeCoverage() {
+            const lat = parseFloat(document.getElementById('balloonLat').value);
+            const lon = parseFloat(document.getElementById('balloonLon').value);
+            
+            if (isNaN(lat) || isNaN(lon)) {
+                alert('Please enter valid latitude and longitude first');
+                return;
+            }
+            
+            // Show loading message
+            document.getElementById('contactsInfo').innerHTML = 
+                '<span style="color: #00d4ff;">Recomputing coverage...</span>';
+            
+            try {
+                // Call the backend script to regenerate coverage
+                const response = await fetch(`recompute_coverage.sh?lat=${lat}&lon=${lon}`);
+                
+                if (!response.ok) {
+                    throw new Error('Backend script failed');
+                }
+                
+                // Wait a moment for file to be written
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Reload coverage data
+                await loadCoverage();
+                
+                alert('Coverage recomputed successfully!');
+            } catch (error) {
+                console.error('Error recomputing coverage:', error);
+                document.getElementById('contactsInfo').innerHTML = 
+                    '<span style="color: #ff4444;">Recompute failed</span><br>' +
+                    'Manually run: ./lpp2_visualize ' + lat + ' ' + lon;
+                
+                // Show instructions
+                alert('Automatic recompute not available.\n\n' +
+                      'Please run this command in terminal:\n' +
+                      `./lpp2_visualize ${lat} ${lon}\n\n` +
+                      'Then click "Reload" in your browser.');
+            }
+        }
+
+        // Handle clicks on the globe to set balloon position
+        const clickHandler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        clickHandler.setInputAction(function(click) {
+            const cartesian = viewer.camera.pickEllipsoid(click.position, viewer.scene.globe.ellipsoid);
+            
+            if (cartesian) {
+                const cartographic = Cesium.Cartographic.fromCartesian(cartesian);
+                const lat = Cesium.Math.toDegrees(cartographic.latitude);
+                const lon = Cesium.Math.toDegrees(cartographic.longitude);
+                const alt = parseFloat(document.getElementById('balloonAlt').value) || 30000;
+                
+                // Update input fields
+                document.getElementById('balloonLat').value = lat.toFixed(4);
+                document.getElementById('balloonLon').value = lon.toFixed(4);
+                
+                // Update balloon marker
+                addBalloonMarker(lat, lon, alt);
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+        // Initialize: Add initial balloon marker
+        const initialLat = parseFloat(document.getElementById('balloonLat').value);
+        const initialLon = parseFloat(document.getElementById('balloonLon').value);
+        const initialAlt = parseFloat(document.getElementById('balloonAlt').value);
+        addBalloonMarker(initialLat, initialLon, initialAlt);
+
+        // Load satellites and coverage
         loadSatellites();
-
-        // Enable lighting
-        viewer.scene.globe.enableLighting = true;
+        loadCoverage();
     </script>
 </body>
 </html>

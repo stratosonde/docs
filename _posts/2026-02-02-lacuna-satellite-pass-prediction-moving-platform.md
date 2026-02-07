@@ -667,10 +667,8 @@ This post is part of the Stratosonde communications architecture series:
 
 ---
 
-*LPP2 Library Documentation: [VISUALIZATION_README.md](https://github.com/stratosonde/firmware/tree/main/temp/lacuna)*
-
 *Lacuna Space: [https://lacuna.space](https://lacuna.space)*
 
-*Interactive Visualization: [Lacuna Satellite Pass Predictor](/assets/visualizations/lacuna-satellite-viz/visualize.html)*
+*Interactive Visualization: [Lacuna Satellite Pass Predictor]({{ site.baseurl }}/assets/visualizations/lacuna-satellite-viz/visualize.html)*
 
 
