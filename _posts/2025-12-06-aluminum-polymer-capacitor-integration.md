@@ -2,12 +2,12 @@
 layout: post
 title: "Aluminum Polymer Capacitor Integration: Bridging the Supercap-Ceramic Gap"
 date: 2025-12-06 09:00:00 -0700
-
-> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Leaky_Aluminum_Polymer_Capacitors_Drained_the_Battery.m4a)  
-> *An AI-generated audio discussion created by Google's NotebookLM*
 categories: hardware power testing
 tags: [aluminum polymer, capacitor, temperature, characterization, power architecture, stratosphere, extreme cold, ESR]
 ---
+
+> **🎧 Listen to this article:** [NotebookLM Podcast]({{ site.baseurl }}/assets/audio/Leaky_Aluminum_Polymer_Capacitors_Drained_the_Battery.m4a)  
+> *An AI-generated audio discussion created by Google's NotebookLM*
 
 # Aluminum Polymer Capacitor Integration: Bridging the Supercap-Ceramic Gap
 
