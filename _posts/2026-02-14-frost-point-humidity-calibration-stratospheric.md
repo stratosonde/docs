@@ -111,63 +111,35 @@ Three RH lines tell the story:
 
 The compensated RH should match the expected line. It doesn't. Even with correct temperature compensation, the divergence confirms the sensor is not measuring air at the expected frost point.
 
-**Panel 2 — Thermal Instability:**
+**Panel 2 — Temperature Behavior:**
 
-The temperature traces reveal the fundamental problem. The AD7746 internal temperature sensor (dashed lines) shows the actual sensor temperature varying between approximately -65°C and -45°C as heater power increases. But notice:
+The temperature traces show the AD7746 internal temperature sensor (dashed lines) varying between approximately -65°C and -45°C as heater power increases:
 
-- The sensor never stabilizes at any temperature
-- Heater phases show continuous temperature drift
 - Yellow (12W) and orange (24W) shaded regions indicate heater periods
 - Chamber setpoint (black dashed steps) shows the intended -70°C
+- Sensor temperature responds to heater power changes
 
-The system is thermally chaotic. The chamber compressor actively cools to maintain -70°C while the heater actively warms the test box. These competing heat flows create unpredictable temperature gradients. The sensor experiences different temperatures depending on proximity to: heater surface, chamber walls, incoming cold air from saturator tube, or local convection currents.
+The temperature differential is working as intended—the heater creates warmer conditions in the test box relative to the chamber temperature. But something is clearly wrong with the humidity measurements.
 
 **Panel 1 — The Sensor Works Fine:**
 
 The raw capacitance measurement is rock-solid: 157.57 ± 2.15 pF over 6.5 hours. This is excellent performance from the AD7746+DHP14 system—standard deviation of 2.15 pF represents measurement precision of ~0.5% of the total signal swing.
 
-**The sensor is working correctly. What isn't working is the humidity reference it's measuring against.**
+**The sensor is working correctly. But the calibration reference isn't.**
 
-### The Core Problem: Thermodynamic Underspecification
+### Initial Interpretation: Maybe Insufficient Equilibration Time?
 
-The fundamental failure isn't the sensor—it's the calibration apparatus. Placing a heater inside a temperature chamber creates an inherently unstable system:
+The first test ran for 6.5 hours, but perhaps that wasn't long enough. Looking at the divergence between expected and measured absolute humidity, the initial hypothesis was that the system simply needed more time to reach thermal equilibrium. 
 
-**Single degree of freedom (heater power) attempting to control two independent variables:**
-1. Saturator tube temperature (determines frost point)
-2. Sensor temperature (determines relative humidity for a given absolute humidity)
+Maybe the frost coating needed longer to build up uniformly. Maybe the moisture levels needed more time to stabilize throughout the system. The temperature control seemed stable enough, and the heater was creating the intended differential.
 
-**Greenspan's solution was complete thermal separation:**
-- **Saturator**: 50-liter cryogenic bath with proportional temperature control (2000W heaters + LN₂ cooling)
-- **Test Chamber**: Separate enclosure with vacuum-jacketed glass bell jar, independent LN₂ cooling, own temperature controller
-- **Connection**: Only via thin gas stream through tubing
+The sensor precision was excellent—2.15 pF standard deviation over 6.5 hours. If we just gave the system more time to settle, perhaps the humidity reference would stabilize at the expected values.
 
-Two independent, well-regulated thermal systems connected by a mass flow carrying the calibrated humidity.
-
-My setup collapsed both functions into a single temperature chamber with a resistive heater as the differentiator. The result: thermal coupling between saturator and sensor that prevented establishing independent, stable temperatures for each.
-
-**Lesson: Greenspan's complexity wasn't overengineering—it was the minimum viable system.** You cannot establish a stable frost-point reference and an independent measurement temperature in the same thermal enclosure using simple resistive heating.
-
-### What We Actually Measured
-
-If the absolute humidity isn't constant at the expected frost point value, what is the sensor measuring?
-
-Several non-equilibrium effects likely dominate:
-
-1. **Variable frost point**: As the heater warms the test box, it also warms the air flowing through the saturator tube entrance, changing the local temperature where frost deposits. Different flow paths through the coiled tube see different temperatures—some regions sublimating ice, others depositing it.
-
-2. **Surface adsorption/desorption**: At these low humidities (~0.08 g/kg if at -70°C saturation), moisture adsorbed on chamber walls, test box surfaces, cable insulation, and the sensor housing becomes significant. Temperature changes drive moisture off these surfaces or back onto them, creating humidity transients independent of the saturator.
-
-3. **Thermal lag and gradients**: The DHP14 capacitive sensor, AD7746 IC, PT1000 RTD, and test box walls are all at different temperatures with different thermal time constants. What temperature should we use for calibration calculations when the sensor elements themselves span a 5-10°C gradient?
-
-4. **Incomplete frost formation**: Without controlled ice coating (per Greenspan's 7-hour procedure), we don't know if the saturator tube interior is uniformly frosted, partially frosted, or frost-free. Ice distribution directly determines saturation effectiveness.
-
-We successfully measured *something* with high precision. But that something was a complex function of incomplete thermal equilibrium, surface effects, and uncertain ice coverage—not a known frost-point reference.
-
-**Precision without accuracy is just expensive noise.**
+**Working hypothesis after Test 1:** The approach is sound, but equilibration time is insufficient. Solution: extend the stabilization period.
 
 ## Test 2: Extended Equilibration — "What If We Just Wait Longer?"
 
-After seeing the thermal chaos in Test 1, the second attempt (February 12, two runs totaling 8.4 hours) kept the same heater differential approach but with a critical change: **patience**.
+The second attempt (February 12, two runs totaling 8.4 hours) kept the same heater differential approach but with extended equilibration: **patience**.
 
 The hypothesis: maybe the system just needs more time. Let the chamber stabilize completely at target temperature before starting measurements. Flow humidified air through the saturator tube much longer to build up frost coating. Give the entire system hours to reach equilibrium instead of minutes.
 
@@ -183,17 +155,21 @@ The hypothesis: maybe the system just needs more time. Let the chamber stabilize
 
 Panel 4 reveals the same fundamental problem: absolute humidity is not constant. The mixing ratio shows significant drift within the run, and the uncompensated vs compensated RH lines (Panel 3) show the datasheet formula is being applied but doesn't fix the core issue.
 
-**The failure mode persists.** Extended equilibration time didn't solve the thermal chaos problem—the heater still fought the chamber compressor, creating unpredictable temperature gradients. More importantly, we still had no confirmation that ice was uniformly coating the saturator tube interior.
+**The failure mode persists.** Extended equilibration time didn't help. The absolute humidity still doesn't match the expected values, and still varies within the run.
 
-The capacitance measurements remained precise (4.48 pF and 3.41 pF standard deviations), proving again that the sensor works. But without a stable thermal environment and confirmed frost formation, the humidity readings remained meaningless.
+The capacitance measurements remained precise (4.48 pF and 3.41 pF standard deviations), proving again that the sensor works. But the humidity readings still made no physical sense.
 
-**Lesson: Waiting longer doesn't fix a fundamentally unstable system.** The competing heater/cooler problem requires architectural change, not just extended runtime.
+**At this point, the realization began to form:** Maybe the fundamental assumption was wrong. Maybe the tube isn't properly iced. Maybe the air isn't actually reaching saturation at the frost point. 
 
-## Test 3: Eliminate the Heater — Simplest Possible Approach
+If there's no controlled ice coating inside the saturator tube, we're not measuring air saturated at a known frost point—we're just measuring whatever humidity happens to be present. The heater differential approach was trying to solve the wrong problem. The issue wasn't about creating a temperature difference between the saturator and sensor. The issue was that we had no confirmed humidity reference in the first place.
 
-The third attempt (February 13, 7.6 hours) abandoned the temperature differential entirely. If the heater creates thermal chaos, just remove it.
+**Lesson: Waiting longer doesn't create ice where none exists.** Before worrying about temperature control sophistication, we needed to verify the most basic assumption: is frost actually forming uniformly in the saturator tube?
 
-The new approach: set chamber to cold temperature, let both saturator tube and test box reach the same temperature, flow humidified air through the system. The sensor measures air at the frost point temperature directly—no differential, no competing heat sources.
+## Test 3: Eliminate the Heater — Test the Ice Coating Hypothesis
+
+The third attempt (February 13, 7.6 hours) abandoned the temperature differential entirely based on the realization from Test 2: if the tube isn't properly iced, all the temperature control sophistication is irrelevant.
+
+The new approach: simplify everything. Set chamber to cold temperature, let both saturator tube and test box reach the same temperature, flow humidified air through the system. No heater, no temperature differential—just the simplest possible test of whether frost formation and saturation can happen naturally.
 
 ![Test 3 Results - February 13]({{ site.baseurl }}/assets/images/posts/2026-02-14-frost-point-humidity-calibration-stratospheric/test_0213_detailed.png)
 
@@ -209,16 +185,16 @@ Panel 4 shows mixing ratio values around 35-40 g/kg—**orders of magnitude high
 
 Panel 3 shows the effect of temperature compensation: the uncompensated RH (grey dotted), compensated RH (red solid), and expected RH (blue dashed) all diverge. The DHP14 formula is being applied, but it can't compensate for measuring the wrong reference condition.
 
-**The core problem revealed:** Without Greenspan's meticulous 7-hour ice coating procedure, we have no idea if frost is forming uniformly in the saturator tube. Natural frost deposition is uncontrolled:
+**The core problem confirmed:** The measured mixing ratios are physically impossible at these temperatures. This proves the air is not saturated at the chamber temperature. The hypothesis was correct—without Greenspan's meticulous 7-hour ice coating procedure, frost is not forming uniformly (or perhaps at all) in the saturator tube:
 
-- Ice preferentially nucleates at tube entrance (steepest thermal gradient)
-- Downstream sections may be bare—moisture deposits early, leaving dry air for rest of tube
+- Ice may preferentially nucleate at tube entrance (steepest thermal gradient) while downstream sections remain bare
+- Moisture could deposit early in the tube, leaving dry air for the rest of the flow path
 - Without visual confirmation (impossible in sealed coiled tube), ice coverage is unknown
-- No 16-hour equilibration period—measurements started immediately
+- No proper equilibration period—measurements started immediately
 
 We successfully measured capacitance with 3.0 pF standard deviation (excellent precision). But without a controlled reference condition, that precision is meaningless.
 
-**Lesson: Simplification doesn't solve the fundamental physics problem.** Proper ice coating and equilibration aren't optional steps—they're required for establishing a known humidity reference.
+**Lesson: You can't calibrate against an uncontrolled reference.** Proper ice coating and equilibration aren't optional steps—they're required for establishing a known humidity reference. Tests 1 and 2 weren't failing because of temperature control issues—they were failing because we never had a proper humidity reference to begin with.
 
 ## The PT1000 Reference Resistor Problem
 
@@ -327,33 +303,35 @@ This means each 1 mm tube needs only ~3 mm of ice-coated length to achieve the s
 
 The practical implication: the tube bundle can be short (a small loop or coil rather than 16 feet), making it physically compatible with a compact temperature chamber while providing *better* saturation than the original large-tube design.
 
-## Summary: Three Tests, Three Failure Modes
+## Summary: Three Tests, Progressive Learning
 
 Across all three tests (66,902 total samples over 21.5 hours), the AD7746+DHP14 sensor demonstrated excellent measurement precision: capacitance standard deviations of 2.1-4.0 pF represent sub-femtoFarad noise floors and signal-to-noise ratios >50:1.
 
 **But that precision measured nothing useful.** The absolute humidity calculations (Panel 4 in each test plot) show the sensor was not measuring air at a stable, known frost point. Instead of flat mixing ratio lines indicating constant absolute humidity, all three tests showed significant drift and values orders of magnitude higher than expected.
 
-**The three tests mapped three distinct failure modes:**
+**The three tests represented progressive understanding:**
 
-| Test | Approach | Key Finding | Root Cause |
-|------|----------|-------------|------------|
-| **Test 1** | Heater differential | Thermal chaos, unstable temps | Single chamber can't support two independent thermal zones |
-| **Test 2** | Extended equilibration | Same instability, longer wait | Waiting doesn't fix thermodynamic underspecification |
-| **Test 3** | No heater, stepped temp | Absolute humidity physically impossible | No controlled ice coating, no equilibration protocol |
+| Test | Initial Hypothesis | What Happened | What We Learned |
+|------|-------------------|---------------|-----------------|
+| **Test 1** | Create temp differential with heater | Results unclear, abs humidity doesn't match expected | Maybe needs longer equilibration time? |
+| **Test 2** | Same as Test 1, but wait longer | Still doesn't work | Wait—maybe the tube isn't iced and air isn't saturated |
+| **Test 3** | Simplify everything to test ice coating theory | Abs humidity physically impossible | Confirmed: no controlled ice coating = no humidity reference |
+
+Looking back with the benefit of retrospective analysis, it's clear that Test 1 also suffered from thermal instability—placing a heater and cooler in the same chamber creates competing heat flows and unpredictable gradients. But that wasn't obvious at the time. What became obvious by Test 3 was the more fundamental problem: **without Greenspan's meticulous ice coating procedure, we never established a controlled humidity reference in the first place.**
 
 The sensor system is not the problem. The calibration reference is the problem.
 
 ## The Path Forward
 
-The revised calibration system design addresses each identified failure mode:
+The revised calibration system design addresses the identified problems:
 
-| Failure Mode | Root Cause | Revision 2 Fix |
-|-------------|-----------|----------------|
-| Thermal chaos (Test 1) | Single chamber, competing heater/cooler | Smaller isolated all-aluminum test box |
-| No confirmed ice coating (Test 2) | Uncontrolled in-situ frost deposition | Deliberate coating procedure with proper dry-down |
+| Problem | Root Cause | Revision 2 Fix |
+|---------|-----------|----------------|
+| No humidity reference | Uncontrolled frost deposition | Deliberate ice coating procedure with proper dry-down |
 | Poor gas-ice contact | Single large-diameter tube | Parallel 1mm tube bundle, ~12× shorter diffusion path |
 | Reference resistor drift | High-TCR reference in PT1000 circuit | Precision ≤5 ppm/°C thin-film resistor |
 | Sensor PCB too large | Bench development layout | Minimum-footprint PCB for test box |
+| Large test box volume | Slow equilibration, surface effects | Compact all-aluminum test box |
 | Insufficient equilibration | Measurements started immediately | 12+ hour equilibration protocol |
 
 The next iteration will also incorporate two procedural changes learned from Greenspan:
